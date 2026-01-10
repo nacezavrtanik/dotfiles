@@ -53,7 +53,7 @@ if [[ -z "$(cat ~/.vimrc | grep "$config_line")" ]]
 fi
 
 # .tmux.conf additions
-config_line="source-file ~/bin/.tmux.conf"
+config_line="source-file ~/bin/tmux/.tmux.conf"
 config_segment="
 # PERSONAL ADDITIONS
 $config_line
