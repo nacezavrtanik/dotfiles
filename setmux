@@ -1,39 +1,41 @@
 #!/bin/bash
 
 setup_sessions() {
-if $(tmux ls > /dev/null 2>&1); then
-    echo ERROR: tmux server already running!
-    return 1
-fi
+    if $(tmux ls > /dev/null 2>&1); then
+        echo ERROR: tmux server already running!
+        return 1
+    fi
 
-here=$(pwd)
-sess_num=0
+    here=$(pwd)
+    sess_num=0
 
-s=null
-cd
-tmux new-session -d -s "$s"
-echo "$((sess_num++)): $s"
+    s=null
+    cd
+    tmux new-session -d -s "$s"
+    echo "$((sess_num++)): $s"
 
-s=todo
-initial="$s"
-cd
-tmux new-session -d -s "$s" -n todo 'todo --open'
-echo "$((sess_num++)): $s"
+    s=todo
+    initial="$s"
+    cd
+    tmux new-session -d -s "$s" -n todo
+    tmux send-keys -t "$s" 'todo --open ' C-m
+    echo "$((sess_num++)): $s"
 
-s=bin
-cd ~/bin
-todo --list | grep -xq '\* bin' || todo --new bin
-tmux new-session -d -s "$s"
-tmux new-window -t "$s":2
-tmux new-window -t "$s":3 -n todo 'todo --open bin'
-echo "$((sess_num++)): $s"
+    s=bin
+    cd ~/bin
+    todo --list | grep -xq '\* bin' || todo --new bin
+    tmux new-session -d -s "$s"
+    tmux new-window -t "$s":2
+    tmux new-window -t "$s":3 -n todo
+    tmux send-keys -t "$s" 'todo --open bin' C-m
+    echo "$((sess_num++)): $s"
 
-if [ -f ~/bin/.sessions ]; then
-    . ~/bin/.sessions "$sess_num"
-fi
+    if [ -f ~/bin/tmux/.sessions ]; then
+        . ~/bin/tmux/.sessions "$sess_num"
+    fi
 
-cd "$here"
-tmux attach-session -t "$initial" \; detach
+    cd "$here"
+    tmux attach-session -t "$initial" \; detach
 }
 
 
