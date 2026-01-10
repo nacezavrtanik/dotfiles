@@ -1,0 +1,14 @@
+# vim: filetype=tmux
+
+set-option -g @status_bg brightblack
+set-option -g @status_fg white
+set-option -g @cursor_fg yellow
+
+set-option -g status-style "fg=#{@status_fg},bg=#{@status_bg}"
+set-option -gw window-status-current-style "fg=#{@status_bg},bg=#{@status_fg},bold"
+set-option -gw pane-active-border-style "fg=#{@status_fg}"
+set-option -gw pane-border-style "fg=#{@status_bg}"
+set-option -g menu-style "fg=#{@status_fg},bg=#{@status_bg}"
+set-option -g menu-border-style "fg=#{@status_fg},bg=#{@status_bg}"
+set-option -g copy-mode-current-match-style "fg=#{@cursor_fg},reverse,bold"
+run-shell 'tmux set-option -g display-panes-active-colour "#{@cursor_fg}"'
