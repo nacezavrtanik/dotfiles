@@ -116,14 +116,9 @@ show() {
 initial_dir=$(pwd)
 todos_dir=~/bin/.todos/
 [ -d "$todos_dir" ] || mkdir $todos_dir
-default_name=todo
-[ -f "$todos_dir/$default_name.md" ] || cat << EOF > $todos_dir/$default_name.md
-
-TODO
-====
-
-EOF
 default_flag=--open
+default_name=todo
+workspace_name=workspace
 
 
 args_from_input() {
@@ -185,6 +180,9 @@ args_from_input() {
 
 manage_todos() {
     cd "$todos_dir"
+
+    [ -f "$default_name.md" ] || new "$default_name" > /dev/null
+    [ -f "$workspace_name.md" ] || new "$workspace_name" > /dev/null
 
     case $1 in
         -d | --delete )
