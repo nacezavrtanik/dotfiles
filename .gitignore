@@ -1,3 +1,10 @@
+# Machine-specific config files/dirs
+bash/local.sh
+tmux/tmux.local.conf
+alacritty/local.toml
+vim/local.vim
+nvim/lua/local/
+
 # todos dir for use with todo command
 .todos/
 
@@ -5,7 +12,7 @@
 .theme
 
 # tmux sessions setup
-.sessions
+tmux/.sessions
 
 # command presets to filter with the go command
 .actions_pre

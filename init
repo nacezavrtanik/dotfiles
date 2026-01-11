@@ -1,16 +1,15 @@
 #!/bin/bash
 
-echo Initializing custom setup ...
+echo INIT: packages
 
-# Install packages
 sudo apt-get update
-sudo apt-get install -y git tmux alacritty fzf ripgrep
+sudo apt-get install --yes git tmux alacritty fzf ripgrep
 
 # Compile nvim
 if command -v nvim > /dev/null 2>&1; then
-    echo Neovim has already been installed!
+    echo "  nvim: already installed"
 else
-    echo Attempting to compile nvim from source ...
+    echo "  nvim: attempting to compile from source ..."
     nvim_repo=/tmp/neovim-repo
     git clone --depth=1 --branch=nightly \
         https://github.com/neovim/neovim $nvim_repo
@@ -23,80 +22,75 @@ else
     nvim --version
 fi
 
-# .bashrc additions
-config_line=". ~/bin/.bashrc"
-config_segment="
-# PERSONAL ADDITIONS
-$config_line
-"
-if [[ -z "$(cat ~/.bashrc | grep "$config_line")" ]]
-    then
-        echo "$config_segment" >> ~/.bashrc
-        echo Config added to .bashrc!
-    else
-        echo Config in .bashrc had already been set up!
-fi
 
-# .vimrc additions
-config_line="source ~/bin/.vimrc"
-config_segment="
-\" PERSONAL ADDITIONS
-$config_line
-"
-touch ~/.vimrc
-if [[ -z "$(cat ~/.vimrc | grep "$config_line")" ]]
-    then
-        echo "$config_segment" >> ~/.vimrc
-        echo Config added to .vimrc!
-    else
-        echo Config in .vimrc had already been set up!
-fi
+echo "INIT: configs"
 
-# .tmux.conf additions
-config_line="source-file ~/bin/tmux/.tmux.conf"
-config_segment="
-# PERSONAL ADDITIONS
-$config_line
-"
-touch ~/.tmux.conf
-if [[ -z "$(cat ~/.tmux.conf | grep "$config_line")" ]]
-    then
-        echo "$config_segment" >> ~/.tmux.conf
-        echo Config added to .tmux.conf!
-    else
-        echo Config in .tmux.conf had already been set up!
-fi
-
-# alacritty config
-my_config=~/bin/alacritty/alacritty.toml
-local_config=~/.config/alacritty/alacritty.toml
-additional_config=~/.config/alacritty/alacritty_additional.toml
-if diff --new-file "$local_config" "$my_config" > /dev/null; then
-    # Local config and config in bin/ are the same
-    echo Config for alacritty had already been set up!
+# BASH
+# Unlike with other configs below, we only *append* the custom config to the
+# existing `.bashrc`, because we don't want to replace `.bashrc` entirely.
+name=.bashrc
+current=~/"$name"
+config_line=". ~/bin/bash/$name"
+if grep -xq "$config_line" "$current"; then
+    echo "  bash: skipped"
 else
+    touch ~/bin/bash/local.sh
+    echo "$config_line" >> "$current"
+    echo "  bash: done"
+fi
+
+# VIM
+name=.vimrc
+current=~/"$name"
+bin=~/bin/vim/"$name"
+if diff --new-file "$current" "$bin" > /dev/null; then
+    echo "  vim: skipped"
+else
+    touch ~/bin/vim/local.vim
+    cp --backup=numbered "$bin" "$current"
+    echo "  vim: done"
+fi
+
+# TMUX
+name=.tmux.conf
+current=~/"$name"
+bin=~/bin/tmux/"$name"
+if diff --new-file "$current" "$bin" > /dev/null; then
+    echo "  tmux: skipped"
+else
+    touch ~/bin/tmux/tmux.local.conf
+    cp --backup=numbered "$bin" "$current"
+    echo "  tmux: done"
+fi
+
+# ALACRITTY
+name=alacritty.toml
+current=~/.config/alacritty/"$name"
+bin=~/bin/alacritty/"$name"
+if diff --new-file "$current" "$bin" > /dev/null; then
+    echo "  alacritty: skipped"
+else
+    touch ~/bin/alacritty/local.toml
     mkdir --parents ~/.config/alacritty
-    cp --backup=numbered "$my_config" "$local_config"
-    touch "$additional_config"
-    echo Config for alacritty set up!
+    cp --backup=numbered "$bin" "$current"
+    echo "  alacritty: done"
 fi
 
-# nvim config
-my_config=~/bin/nvim/init.lua
-local_config=~/.config/nvim/init.lua
-additional_config_dir=~/.config/nvim/lua/config_additional/
-additional_config=$additional_config_dir/init.lua
-if diff --new-file "$local_config" "$my_config" > /dev/null; then
-    # Local config and config in bin/ are the same
-    echo Config for nvim had already been set up!
+# NVIM
+name=init.lua
+current=~/.config/nvim/"$name"
+bin=~/bin/nvim/"$name"
+local_dir=~/bin/nvim/lua/local/
+if diff --new-file "$current" "$bin" > /dev/null; then
+    echo "  nvim: skipped"
 else
-    mkdir --parents "$additional_config_dir"
-    cp --backup=numbered "$my_config" "$local_config"
-    touch "$additional_config"
-    echo Config for nvim set up!
+    mkdir --parents "$local_dir"
+    touch "$local_dir/$name"
+    cp --backup=numbered "$bin" "$current"
+    echo "  nvim: done"
 fi
 
-# git config
+# GIT
 git config --global core.excludesfile ~/bin/.gitignore_global
 git config --global core.editor nvim
 git config --global init.defaultbranch main
@@ -105,7 +99,5 @@ git config --global diff.tool nvimdiff
 git config --global difftool.prompt false
 git config --global alias.df "difftool"
 git config --global alias.adog "log --all --decorate --oneline --graph"
-echo "Config for git (global) set up!"
-
-echo Setup complete!
+echo "  git: done"
 
