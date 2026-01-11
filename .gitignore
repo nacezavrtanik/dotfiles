@@ -12,7 +12,8 @@ nvim/lua/local/
 .theme
 
 # tmux sessions setup
-tmux/.sessions
+tmux/sessions.sh
+tmux/tmux.sessions.conf
 
 # command presets to filter with the go command
 .actions_pre

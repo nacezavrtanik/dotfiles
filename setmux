@@ -30,8 +30,11 @@ setup_sessions() {
     tmux send-keys -t "$s" 'todo --open bin' C-m
     echo "$((sess_num++)): $s"
 
-    if [ -f ~/bin/tmux/.sessions ]; then
-        . ~/bin/tmux/.sessions "$sess_num"
+    if [ -f ~/bin/tmux/sessions.sh ]; then
+        . ~/bin/tmux/sessions.sh "$sess_num"
+    fi
+    if [ ! -f ~/bin/tmux/tmux.sessions.conf ]; then
+        cp ~/bin/tmux/tmux.sessions_template.conf ~/bin/tmux/tmux.sessions.conf
     fi
 
     cd "$here"
