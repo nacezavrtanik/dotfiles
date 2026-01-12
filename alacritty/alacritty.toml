@@ -1,6 +1,6 @@
 # Do not modify this file! Add any changes to the local config, instead.
 
 import = [
-    "~/bin/alacritty/common.toml",
-    "~/bin/alacritty/local.toml",
+    "~/dotfiles/alacritty/common.toml",
+    "~/dotfiles/alacritty/local.toml",
 ]

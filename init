@@ -30,11 +30,11 @@ echo "INIT: configs"
 # existing `.bashrc`, because we don't want to replace `.bashrc` entirely.
 name=.bashrc
 current=~/"$name"
-config_line=". ~/bin/bash/$name"
+config_line=". ~/dotfiles/bash/$name"
 if grep -xq "$config_line" "$current"; then
     echo "  bash: skipped"
 else
-    touch ~/bin/bash/local.sh
+    touch ~/dotfiles/bash/local.sh
     echo "$config_line" >> "$current"
     echo "  bash: done"
 fi
@@ -42,11 +42,11 @@ fi
 # VIM
 name=.vimrc
 current=~/"$name"
-bin=~/bin/vim/"$name"
+bin=~/dotfiles/vim/"$name"
 if diff --new-file "$current" "$bin" > /dev/null; then
     echo "  vim: skipped"
 else
-    touch ~/bin/vim/local.vim
+    touch ~/dotfiles/vim/local.vim
     cp --backup=numbered "$bin" "$current"
     echo "  vim: done"
 fi
@@ -54,11 +54,11 @@ fi
 # TMUX
 name=.tmux.conf
 current=~/"$name"
-bin=~/bin/tmux/"$name"
+bin=~/dotfiles/tmux/"$name"
 if diff --new-file "$current" "$bin" > /dev/null; then
     echo "  tmux: skipped"
 else
-    touch ~/bin/tmux/tmux.local.conf
+    touch ~/dotfiles/tmux/tmux.local.conf
     cp --backup=numbered "$bin" "$current"
     echo "  tmux: done"
 fi
@@ -66,11 +66,11 @@ fi
 # ALACRITTY
 name=alacritty.toml
 current=~/.config/alacritty/"$name"
-bin=~/bin/alacritty/"$name"
+bin=~/dotfiles/alacritty/"$name"
 if diff --new-file "$current" "$bin" > /dev/null; then
     echo "  alacritty: skipped"
 else
-    touch ~/bin/alacritty/local.toml
+    touch ~/dotfiles/alacritty/local.toml
     mkdir --parents ~/.config/alacritty
     cp --backup=numbered "$bin" "$current"
     echo "  alacritty: done"
@@ -79,8 +79,8 @@ fi
 # NVIM
 name=init.lua
 current=~/.config/nvim/"$name"
-bin=~/bin/nvim/"$name"
-local_dir=~/bin/nvim/lua/local/
+bin=~/dotfiles/nvim/"$name"
+local_dir=~/dotfiles/nvim/lua/local/
 if diff --new-file "$current" "$bin" > /dev/null; then
     echo "  nvim: skipped"
 else
@@ -91,7 +91,7 @@ else
 fi
 
 # GIT
-git config --global core.excludesfile ~/bin/.gitignore_global
+git config --global core.excludesfile ~/dotfiles/.gitignore_global
 git config --global core.editor nvim
 git config --global init.defaultbranch main
 git config --global advice.detachedhead false

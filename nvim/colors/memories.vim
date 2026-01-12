@@ -1,7 +1,7 @@
 " Name:         memories
 " Description:  A dark colorscheme for 4-bit terminals.
 " Author:       Nace Zavrtanik <zavrtaniknace@gmail.com>
-" Website:      https://www.github.com/nacezavrtanik/bin
+" Website:      https://www.github.com/nacezavrtanik/dotfiles
 " License:      MIT
 
 " Loosely based on the `lunaperche` Vim colorscheme.

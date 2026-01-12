@@ -114,7 +114,7 @@ show() {
 
 
 initial_dir=$(pwd)
-todos_dir=~/bin/.todos/
+todos_dir=~/dotfiles/.todos/
 [ -d "$todos_dir" ] || mkdir $todos_dir
 default_flag=--open
 default_name=todo

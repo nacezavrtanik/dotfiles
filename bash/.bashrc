@@ -1,2 +1,2 @@
-. ~/bin/bash/common.sh
-. ~/bin/bash/local.sh
+. ~/dotfiles/bash/common.sh
+. ~/dotfiles/bash/local.sh

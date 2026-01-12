@@ -7,7 +7,7 @@ exit 1
 
 if [[ ! $1 ]]; then usage; fi
 
-file_directory="$HOME/bin/poetry/"
+file_directory="$HOME/dotfiles/poetry/"
 file_name="${1}.md"
 file_path="${file_directory}${file_name}"
 
