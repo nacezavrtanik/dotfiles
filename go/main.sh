@@ -1,14 +1,14 @@
 #!/bin/bash
 
-if [[ -f ~/dotfiles/.theme ]]; then
-    theme_color=$(< ~/dotfiles/.theme)
+if [[ -f ~/dotfiles/color/.theme ]]; then
+    theme_color=$(< ~/dotfiles/color/.theme)
 else
     theme_color=black
 fi
 
-actions_pre_file=~/dotfiles/.actions_pre
-actions_post_file=~/dotfiles/.actions_post
-actions_file=~/dotfiles/.actions
+actions_pre_file=~/dotfiles/go/.actions_pre
+actions_post_file=~/dotfiles/go/.actions_post
+actions_file=~/dotfiles/go/.actions
 touch "$actions_pre_file" "$actions_file" "$actions_post_file"
 action=$(\
     cat "$actions_pre_file" "$actions_file" "$actions_post_file" |

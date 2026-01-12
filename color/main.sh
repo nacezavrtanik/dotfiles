@@ -97,15 +97,15 @@ function is_in() {
 }
 
 function args_from_input() {
-	if ! [[ -f ~/dotfiles/.theme ]]; then
+	if ! [[ -f ~/dotfiles/color/.theme ]]; then
 		default_theme=white
-		echo $default_theme > ~/dotfiles/.theme
+		echo $default_theme > ~/dotfiles/color/.theme
 	fi
 
 	case $# in
 		0)
 			flag=--all
-			color=$(< ~/dotfiles/.theme)
+			color=$(< ~/dotfiles/color/.theme)
 			;;
 
 		1)
@@ -114,7 +114,7 @@ function args_from_input() {
 				color=$1
 			elif is_in $1 options; then
 				flag=$1
-				color=$(< ~/dotfiles/.theme)
+				color=$(< ~/dotfiles/color/.theme)
 			else
 				return 1
 			fi
@@ -187,7 +187,7 @@ function colorize() {
 			colorize_keyboard $2
 			colorize_wallpaper $2
 			colorize_theme $2
-			echo $2 > ~/dotfiles/.theme
+			echo $2 > ~/dotfiles/color/.theme
 			;;
 	esac
 }
