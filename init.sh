@@ -76,20 +76,6 @@ else
     echo "  alacritty: done"
 fi
 
-# NVIM
-name=init.lua
-current=~/.config/nvim/"$name"
-bin=~/dotfiles/nvim/"$name"
-local_dir=~/dotfiles/nvim/lua/local/
-if diff --new-file "$current" "$bin" > /dev/null; then
-    echo "  nvim: skipped"
-else
-    mkdir --parents "$local_dir"
-    touch "$local_dir/$name"
-    cp --backup=numbered "$bin" "$current"
-    echo "  nvim: done"
-fi
-
 # GIT
 git config --global core.excludesfile ~/dotfiles/.gitignore_global
 git config --global core.editor nvim

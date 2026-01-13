@@ -1,0 +1,2 @@
+#!/bin/bash
+XDG_CONFIG_HOME=~/dotfiles NVIM_APPNAME=nvim exec /usr/local/bin/nvim "$@"
