@@ -1,18 +1,20 @@
-# bin
 
-This repository contains custom bash commands for my
-**TUXEDO Aura 15 Gen2** system, running **Ubuntu 24.04.1 LTS**.
+dotfiles
+========
 
-## Setup
-1. In bash, execute the following commands:
+This repository contains my custom config and shell commands. The setup is
+intended to work on Debian-based Linux distros.
+
+Setup
+-----
+Clone the repo to your home directory, then run:
 ~~~bash
-cd                          # go to home dir
-git clone <repo>            # clone repo
-bin/init                    # add config to .bashrc
+~/dotfiles/init.sh
 ~~~
 
-2. Place other required files into appropriate directories
-   - text files
-   - wallpapers
-   - others (?)
+This will, among other tools, install and configure `alacritty`, `tmux`, and
+`nvim`.
+
+It will also extend the `PATH` env var to make the commands in `bin/` available
+everywhere in Bash.
 
