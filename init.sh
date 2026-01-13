@@ -3,7 +3,7 @@
 echo INIT: packages
 
 sudo apt-get update
-sudo apt-get install --yes git tmux alacritty fzf ripgrep
+sudo apt-get install --yes git tmux alacritty ripgrep
 
 # Compile nvim
 if command -v nvim > /dev/null 2>&1; then

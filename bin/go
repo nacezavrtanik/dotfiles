@@ -1,2 +1,0 @@
-#!/bin/bash
-. ~/dotfiles/go/main.sh "$@"
