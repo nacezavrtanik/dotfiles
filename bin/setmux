@@ -21,13 +21,13 @@ setup_sessions() {
     tmux send-keys -t "$s" 'todo --open ' C-m
     echo "$((sess_num++)): $s"
 
-    s=bin
+    s=dots
     cd ~/dotfiles
-    todo --list | grep -xq '\* bin' || todo --new bin
+    todo --list | grep -xq '\* dotfiles' || todo --new dotfiles
     tmux new-session -d -s "$s"
     tmux new-window -t "$s":2
     tmux new-window -t "$s":3 -n todo
-    tmux send-keys -t "$s" 'todo --open bin' C-m
+    tmux send-keys -t "$s" 'todo --open dotfiles' C-m
     echo "$((sess_num++)): $s"
 
     if [ -f ~/dotfiles/tmux/sessions.sh ]; then
