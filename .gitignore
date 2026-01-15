@@ -3,7 +3,7 @@ bash/local.sh
 tmux/tmux.local.conf
 alacritty/local.toml
 vim/local.vim
-nvim/lua/local/
+nvim/lua/local.lua
 
 # todos dir for use with todo command
 .todos/
