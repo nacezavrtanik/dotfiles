@@ -46,6 +46,11 @@ vim.o.expandtab = true
 
 vim.opt.diffopt = { "vertical", "closeoff", "hiddenoff", "filler" }
 
+vim.keymap.set({ "n", "v" }, "<Leader>y", '"+y')
+vim.keymap.set({ "n", "v" }, "<Leader>Y", '"+Y', { remap = true })
+vim.keymap.set({ "n", "v" }, "<Leader>p", '"+p')
+vim.keymap.set({ "n", "v" }, "<Leader>P", '"+P')
+
 vim.o.grepprg = "rg --vimgrep --hidden --glob '!.git/'"
 vim.keymap.set("n", "<Leader>cn", ":cnext<CR>")
 vim.keymap.set("n", "<Leader>cp", ":cprev<CR>")
