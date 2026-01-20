@@ -1,20 +1,94 @@
 #!/bin/bash
 
-active_session=$(
-    tmux list-sessions |
-    grep -E "\(attached\)$" |
-    cut -d ":" -f 1
-)
+usage() {
+    cat << EOF
+Usage: remind [-h] [-c COLOR] MESSAGE
+Show popup with MESSAGE in the active tmux session.
 
-tmux display-popup -t "$active_session" -E \
-    -w 23 -h 5 \
-    -T "#[align=centre] REMINDER " \
-    -S bg=blue,fg=white \
-    -s bg=blue,fg=white \
-    "cat << EOF
+Options:
+  -h, --help     display this help message and exit
+  -c, --color    color of the popup; can be red, green, or blue (default)
+EOF
+}
 
- $1
+default_bg=blue
+
+args_from_input() {
+    case $# in
+        1)
+            case $1 in
+                -h | --help)
+                    usage
+                    ;;
+                *)
+                    bg=$default_bg
+                    message="$@"
+                    ;;
+                esac
+            ;;
+        3)
+            case $1 in
+                -c | --color)
+                    bg=$2
+                    shift 2
+                    message="$@"
+                    ;;
+                *)
+                    return 1
+                    ;;
+            esac
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    case "$bg" in
+        red)
+            fg=black
+            ;;
+        blue | green)
+            fg=white
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    printf -- "$bg $fg $message"
+}
+
+show_reminder() {
+    bg=$1
+    fg=$2
+    shift 2
+    message="$@"
+
+    active_session=$(
+        tmux list-sessions |
+        grep -E "\(attached\)$" |
+        cut -d ":" -f 1
+    )
+
+    tmux display-popup -E \
+        -t "$active_session" \
+        -w 23 -h 5 \
+        -T "#[align=centre] REMINDER " \
+        -S bg=$bg,fg=$fg \
+        -s bg=$bg,fg=$fg \
+        "cat << EOF
+
+ $message
 EOF
 
 read -p ' ' input
 "
+}
+
+if args=$(args_from_input "$@"); then
+    show_reminder $args
+else
+    usage
+    exit 1
+fi
+
