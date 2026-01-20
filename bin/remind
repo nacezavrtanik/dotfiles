@@ -1,0 +1,20 @@
+#!/bin/bash
+
+active_session=$(
+    tmux list-sessions |
+    grep -E "\(attached\)$" |
+    cut -d ":" -f 1
+)
+
+tmux display-popup -t "$active_session" -E \
+    -w 23 -h 5 \
+    -T "#[align=centre] REMINDER " \
+    -S bg=blue,fg=white \
+    -s bg=blue,fg=white \
+    "cat << EOF
+
+ $1
+EOF
+
+read -p ' ' input
+"
