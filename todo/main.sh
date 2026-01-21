@@ -34,7 +34,7 @@ EOF
 
 delete() {
     if ! [ -f "$1.md" ]; then
-        echo "ERROR: Name *$1* does not exist ..."
+        echo "ERROR: Name *$1* does not exist ..." >&2
         return "$name_doesnt_exist"
     fi
 
@@ -51,10 +51,10 @@ list() {
 
 new() {
     if [[ -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* already exists ..."
+        echo "ERROR: Name *$1* already exists ..." >&2
         return "$name_already_exists"
     elif echo "$1" | grep -Ev '^[[:alnum:]]+$' > /dev/null; then
-        echo "ERROR: Name *$1* is not alphanumeric ..."
+        echo "ERROR: Name *$1* is not alphanumeric ..." >&2
         return "$name_not_alphanumeric"
     fi
 
@@ -68,7 +68,7 @@ new() {
 
 open() {
     if ! [ -f "$1.md" ]; then
-        echo "ERROR: Name *$1* does not exist ..."
+        echo "ERROR: Name *$1* does not exist ..." >&2
         return "$name_doesnt_exist"
     fi
 
@@ -77,13 +77,13 @@ open() {
 
 rename() {
     if ! [ -f "$1.md" ]; then
-        echo "ERROR: Name *$1* does not exist ..."
+        echo "ERROR: Name *$1* does not exist ..." >&2
         return "$name_doesnt_exist"
     elif [[ -f "$2.md" ]]; then
-        echo "ERROR: Name *$2* already exists ..."
+        echo "ERROR: Name *$2* already exists ..." >&2
         return "$name_already_exists"
     elif echo "$2" | grep -Ev '^[[:alnum:]]+$' > /dev/null; then
-        echo "ERROR: Name *$2* is not alphanumeric ..."
+        echo "ERROR: Name *$2* is not alphanumeric ..." >&2
         return "$name_not_alphanumeric"
     fi
 
@@ -105,7 +105,7 @@ rename() {
 
 show() {
     if ! [ -f "$1.md" ]; then
-        echo "ERROR: Name *$1* does not exist ..."
+        echo "ERROR: Name *$1* does not exist ..." >&2
         return "$name_doesnt_exist"
     fi
 
@@ -229,7 +229,7 @@ manage_todos() {
 if args=$(args_from_input "$@"); then
     manage_todos $args
 else
-    cat << EOF
+    cat << EOF >&2
 Invalid syntax ...
 Try 'todo --help' for more information.
 EOF
