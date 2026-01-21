@@ -75,7 +75,9 @@ display_popup() {
         -E -t "$active_session" \
         -w 23 -h 5 \
         -T "#[align=centre] REMINDER " -S $style -s $style \
-        "cat << EOF
+        "
+tput clear civis; stty -echo
+cat << EOF
 
  $message
 EOF
