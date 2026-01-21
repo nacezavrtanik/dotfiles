@@ -1,81 +1,80 @@
 #!/bin/bash
 
+invalid_syntax=1
+invalid_color=11
+
+
 usage() {
     cat << EOF
-Usage: remind [-h] [-c COLOR] MESSAGE
-Show popup with MESSAGE in the active tmux session.
+Usage: remind [-h] [-c COLOR] MESSAGE [MESSAGE ...]
+Display popup in the active tmux session.
 
 Options:
-  -h, --help     display this help message and exit
-  -c, --color    color of the popup; can be red, green, or blue (default)
+  -h, --help           display this help and exit
+  -c, --color COLOR    set popup color; can be red, green, or blue (default)
+
+Exit status:
+  0     everything OK,
+  1     invalid syntax,
+  11    invalid color.
 EOF
 }
 
-default_bg=blue
 
-args_from_input() {
-    case $# in
-        1)
-            case $1 in
-                -h | --help)
-                    usage
-                    ;;
-                *)
-                    bg=$default_bg
-                    message="$@"
-                    ;;
-                esac
-            ;;
-        3)
-            case $1 in
-                -c | --color)
-                    bg=$2
-                    shift 2
-                    message="$@"
-                    ;;
-                *)
-                    return 1
-                    ;;
-            esac
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    case "$bg" in
-        red)
-            fg=black
-            ;;
-        blue | green)
-            fg=white
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-
-    printf -- "$bg $fg $message"
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h | --help)
+                help=true
+                return 0
+                ;;
+            -c | --color)
+                [[ $# -gt 1 ]] || return $invalid_syntax
+                color=$2
+                shift 2
+                ;;
+            --)
+                shift
+                message="$@"
+                break
+                ;;
+            *)
+                message="$@"
+                break
+                ;;
+        esac
+    done
+    [[ -z $message ]] && return $invalid_syntax
+    printf -- "${help:=false} ${color:=blue} $message"
 }
 
-show_reminder() {
-    bg=$1
-    fg=$2
-    shift 2
+
+display_popup() {
+    help=$1
+    $help && usage && return
+    shift
+
+    color=$1
+    case $color in
+        red)
+            style="bg=$color,fg=black"
+            ;;
+        blue | green)
+            style="bg=$color,fg=white"
+            ;;
+        *)
+            echo "ERROR: *$color* is not a valid color ..." >&2
+            return $invalid_color
+            ;;
+    esac
+    shift
+
     message="$@"
-
-    active_session=$(
-        tmux list-sessions |
-        grep -E "\(attached\)$" |
-        cut -d ":" -f 1
-    )
-
-    tmux display-popup -E \
-        -t "$active_session" \
+    active_session=$(tmux list-sessions | grep "(attached)$" | cut -d ":" -f 1)
+    tmux display-popup \
+        -E -t "$active_session" \
         -w 23 -h 5 \
-        -T "#[align=centre] REMINDER " \
-        -S bg=$bg,fg=$fg \
-        -s bg=$bg,fg=$fg \
+        -T "#[align=centre] REMINDER " -S $style -s $style \
         "cat << EOF
 
  $message
@@ -85,10 +84,14 @@ read -p ' ' input
 "
 }
 
-if args=$(args_from_input "$@"); then
-    show_reminder $args
+
+if args=$(parse_args "$@"); then
+    display_popup $args
 else
-    usage
-    exit 1
+    cat << EOF >&2
+Invalid syntax ...
+Try 'remind --help' for more information.
+EOF
+    (exit "$invalid_syntax")
 fi
 
