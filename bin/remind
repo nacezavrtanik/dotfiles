@@ -70,20 +70,20 @@ display_popup() {
     shift
 
     message="$@"
-    active_session=$(tmux list-sessions | grep "(attached)$" | cut -d ":" -f 1)
-    tmux display-popup \
-        -E -t "$active_session" \
-        -w 23 -h 5 \
-        -T "#[align=centre] REMINDER " -S $style -s $style \
-        "
-tput clear civis; stty -echo
-cat << EOF
-
- $message
+    width=40; heigth=11
+    indent=$((($width - 1 - ${#message}) / 2)); newlines=$((($heigth - 3) / 2))
+    popup_body=$(cat << EOF
+        tput clear civis; stty -echo
+        printf '%.0s\n' $(seq -s ' ' 1 $newlines)
+        printf '%*s' $indent ''
+        printf "$message"
+        read input
 EOF
-
-read -p ' ' input
-"
+)
+    active_session=$(tmux list-sessions | grep "(attached)$" | cut -d ":" -f 1)
+    tmux display-popup -E -t "$active_session" \
+        -T "#[align=centre] REMINDER " -S $style -s $style \
+        -w $width -h $heigth "$popup_body"
 }
 
 
