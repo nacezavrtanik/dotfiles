@@ -3,6 +3,7 @@
 invalid_syntax=1
 invalid_color=11
 message_too_long=12
+no_active_tmux_session=21
 
 
 usage() {
@@ -18,7 +19,8 @@ Exit status:
   0     everything OK,
   1     invalid syntax,
   11    invalid color,
-  12    message too long.
+  12    message too long,
+  21    no active tmux session.
 EOF
 }
 
@@ -91,7 +93,12 @@ display_popup() {
         read input
 EOF
 )
+
     active_session=$(tmux list-sessions | grep "(attached)$" | cut -d ":" -f 1)
+    if [[ -z $active_session ]]; then
+        echo "ERROR: no active tmux session ..." >&2
+        return $no_active_tmux_session
+    fi
     tmux display-popup -E -t "$active_session" \
         -T "#[align=centre] REMINDER " -S $style -s $style \
         -w $width -h $heigth "$popup_body"
