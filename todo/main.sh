@@ -33,9 +33,9 @@ EOF
 }
 
 delete() {
-    if ! [ -f "$1.md" ]; then
+    if [[ ! -f "$1.md" ]]; then
         echo "ERROR: Name *$1* does not exist ..." >&2
-        return "$name_doesnt_exist"
+        return $name_doesnt_exist
     fi
 
     rm "$1.md"
@@ -43,51 +43,47 @@ delete() {
 }
 
 list() {
-    ls -1 |
-        grep '.md$' |
-        sed -e 's/^/* /' -e 's/.md$//' |
-        less -F
+    ls -1 *.md | sed -e 's/^/* /' -e 's/.md$//' | less -F
 }
 
 new() {
     if [[ -f "$1.md" ]]; then
         echo "ERROR: Name *$1* already exists ..." >&2
-        return "$name_already_exists"
-    elif echo "$1" | grep -Ev '^[[:alnum:]]+$' > /dev/null; then
+        return $name_already_exists
+    elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
         echo "ERROR: Name *$1* is not alphanumeric ..." >&2
-        return "$name_not_alphanumeric"
+        return $name_not_alphanumeric
     fi
 
-    echo > "$1.md"
-    echo "$1" | tr [:lower:] [:upper:] >> "$1.md"
-    head --bytes=${#1} < /dev/zero | tr '\0' '=' >> "$1.md"
-    echo -e "\n" >> "$1.md"
+    title="$(echo "$1" | tr [:lower:] [:upper:])"
+    underline=$(echo $title | tr [:print:] '=')
+    printf '\n%s\n%s\n\n' "$title" "$underline" > "$1.md"
 
     echo "Created *$1*!"
 }
 
 open() {
-    if ! [ -f "$1.md" ]; then
+    if [[ ! -f "$1.md" ]]; then
         echo "ERROR: Name *$1* does not exist ..." >&2
-        return "$name_doesnt_exist"
+        return $name_doesnt_exist
     fi
 
     nvim "$1.md"
 }
 
 rename() {
-    if ! [ -f "$1.md" ]; then
+    if [[ ! -f "$1.md" ]]; then
         echo "ERROR: Name *$1* does not exist ..." >&2
-        return "$name_doesnt_exist"
+        return $name_doesnt_exist
     elif [[ -f "$2.md" ]]; then
         echo "ERROR: Name *$2* already exists ..." >&2
-        return "$name_already_exists"
-    elif echo "$2" | grep -Ev '^[[:alnum:]]+$' > /dev/null; then
+        return $name_already_exists
+    elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
         echo "ERROR: Name *$2* is not alphanumeric ..." >&2
-        return "$name_not_alphanumeric"
+        return $name_not_alphanumeric
     fi
 
-    mv $1.md $2.md
+    mv "$1.md" "$2.md"
     old_title=$(echo $1 | tr [:lower:] [:upper:])
     old_underline=$(head --bytes="${#old_title}" < /dev/zero | tr '\0' '=')
     if
@@ -104,24 +100,24 @@ rename() {
 }
 
 show() {
-    if ! [ -f "$1.md" ]; then
+    if [[ ! -f "$1.md" ]]; then
         echo "ERROR: Name *$1* does not exist ..." >&2
-        return "$name_doesnt_exist"
+        return $name_doesnt_exist
     fi
 
     less -F "$1.md"
 }
 
 
-initial_dir=$(pwd)
+initial_dir="$(pwd)"
 todos_dir=~/dotfiles/todo/.todos/
-[ -d "$todos_dir" ] || mkdir $todos_dir
+mkdir --parents $todos_dir
 default_flag=--open
 default_name=todo
 workspace_name=workspace
 
 
-args_from_input() {
+parse_args() {
     case $# in
         0)
             flag=$default_flag
@@ -156,33 +152,33 @@ args_from_input() {
                     ;;
 
                 *)
-                    return "$invalid_syntax"
+                    return $invalid_syntax
                     ;;
             esac
             ;;
 
         3)
-            if [ "$1" = "-r" ] || [ "$1" = "--rename" ]; then
+            if [[ "$1" == "-r" || "$1" == "--rename" ]]; then
                 flag=$1
                 name=$2
                 name2=$3
             else
-                return "$invalid_syntax"
+                return $invalid_syntax
             fi
             ;;
 
         *)
-            return "$invalid_syntax"
+            return $invalid_syntax
             ;;
     esac
     printf -- "$flag $name $name2"
 }
 
 manage_todos() {
-    cd "$todos_dir"
+    cd $todos_dir
 
-    [ -f "$default_name.md" ] || new "$default_name" > /dev/null
-    [ -f "$workspace_name.md" ] || new "$workspace_name" > /dev/null
+    [[ -f "$default_name.md" ]] || new $default_name > /dev/null
+    [[ -f "$workspace_name.md" ]] || new $workspace_name > /dev/null
 
     case $1 in
         -d | --delete )
@@ -222,17 +218,17 @@ manage_todos() {
     esac
 
     cd "$initial_dir"
-    return "$exit_code"
+    return $exit_code
 }
 
 
-if args=$(args_from_input "$@"); then
+if args=$(parse_args "$@"); then
     manage_todos $args
 else
     cat << EOF >&2
 Invalid syntax ...
 Try 'todo --help' for more information.
 EOF
-    (exit "$invalid_syntax")
+    (exit $invalid_syntax)
 fi
 
