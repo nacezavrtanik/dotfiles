@@ -2,6 +2,7 @@
 
 invalid_syntax=1
 invalid_color=11
+message_too_long=12
 
 
 usage() {
@@ -16,7 +17,8 @@ Options:
 Exit status:
   0     everything OK,
   1     invalid syntax,
-  11    invalid color.
+  11    invalid color,
+  12    message too long.
 EOF
 }
 
@@ -70,7 +72,16 @@ display_popup() {
     shift
 
     message="$@"
+    max_length=80
+    if [[ ${#message} -gt $max_length ]]; then
+        echo "ERROR: message is longer than $max_length characters ..." >&2
+        return $message_too_long
+    fi
+
     width=40; heigth=11
+    if [[ $((${#message} + 4)) -gt $width ]]; then
+        width=$((${#message} + 4))
+    fi
     indent=$((($width - 1 - ${#message}) / 2)); newlines=$((($heigth - 3) / 2))
     popup_body=$(cat << EOF
         tput clear civis; stty -echo
