@@ -1,41 +1,41 @@
 #!/bin/bash
 
 invalid_syntax=1
-name_doesnt_exist=11
-name_already_exists=12
-name_not_alphanumeric=13
+does_not_exist=11
+already_exists=12
+is_not_alphanumeric=13
 
 
 usage() {
     cat << EOF
-Usage: todo [OPTION] [NAME] [NAME2]
+Usage: todo [OPTION]
 Manage TODOs.
 
 Options:
-  -d, --delete    delete TODO with name NAME
-  -h, --help      display this help and exit
-  -l, --list      list all TODOs
-  -n, --new       create new TODO with name NAME
-  -o, --open      open TODO with name NAME in Neovim;
-                    this is the default option if OPTION is not specified;
-                    if NAME is not specified, the default TODO is opened
-  -r, --rename    rename TODO with name NAME to TODO with name NAME2
-  -s, --show      show TODO with name NAME in the terminal;
-                    if NAME is not specified, the default TODO is shown
+  -d, --delete TODO       delete TODO
+  -h, --help              show this help and exit
+  -l, --list              list all TODOs
+  -n, --new TODO          create new TODO
+  -o, --open [TODO]...    open TODOs in Neovim;
+                            this is the default option if OPTION is not given;
+                            if no TODOs are given, the default TODO is opened
+  -r, --rename OLD NEW    rename OLD to NEW
+  -s, --show TODO         show TODO in the terminal;
+                            if TODO is not given, the default TODO is shown
 
 Exit status:
   0     everything OK,
   1     invalid syntax,
-  11    name does not exist,
-  12    name already exists,
-  13    name is not alphanumeric.
+  11    does not exist,
+  12    already exists,
+  13    is not alphanumeric.
 EOF
 }
 
 delete() {
     if [[ ! -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* does not exist ..." >&2
-        return $name_doesnt_exist
+        echo "ERROR: *$1* does not exist ..." >&2
+        return $does_not_exist
     fi
 
     rm "$1.md"
@@ -48,11 +48,11 @@ list() {
 
 new() {
     if [[ -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* already exists ..." >&2
-        return $name_already_exists
+        echo "ERROR: *$1* already exists ..." >&2
+        return $already_exists
     elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
-        echo "ERROR: Name *$1* is not alphanumeric ..." >&2
-        return $name_not_alphanumeric
+        echo "ERROR: *$1* is not alphanumeric ..." >&2
+        return $is_not_alphanumeric
     fi
 
     title="$(echo "$1" | tr [:lower:] [:upper:])"
@@ -63,24 +63,29 @@ new() {
 }
 
 open() {
-    if [[ ! -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* does not exist ..." >&2
-        return $name_doesnt_exist
-    fi
+    todos=""
+    while [[ $# -gt 0 ]]; do
+        if [[ ! -f "$1.md" ]]; then
+            echo "ERROR: *$1* does not exist ..." >&2
+            return $does_not_exist
+        fi
+        todos="$todos $1.md"
+        shift
+    done
 
-    nvim "$1.md"
+    nvim -O $todos
 }
 
 rename() {
     if [[ ! -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* does not exist ..." >&2
-        return $name_doesnt_exist
+        echo "ERROR: *$1* does not exist ..." >&2
+        return $does_not_exist
     elif [[ -f "$2.md" ]]; then
-        echo "ERROR: Name *$2* already exists ..." >&2
-        return $name_already_exists
+        echo "ERROR: *$2* already exists ..." >&2
+        return $already_exists
     elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
-        echo "ERROR: Name *$2* is not alphanumeric ..." >&2
-        return $name_not_alphanumeric
+        echo "ERROR: *$2* is not alphanumeric ..." >&2
+        return $is_not_alphanumeric
     fi
 
     mv "$1.md" "$2.md"
@@ -101,8 +106,8 @@ rename() {
 
 show() {
     if [[ ! -f "$1.md" ]]; then
-        echo "ERROR: Name *$1* does not exist ..." >&2
-        return $name_doesnt_exist
+        echo "ERROR: *$1* does not exist ..." >&2
+        return $does_not_exist
     fi
 
     less -F "$1.md"
@@ -113,15 +118,15 @@ initial_dir="$(pwd)"
 todos_dir=~/dotfiles/todo/.todos/
 mkdir --parents $todos_dir
 default_flag=--open
-default_name=todo
-workspace_name=workspace
+default_todo=todo
+workspace_todo=workspace
 
 
 parse_args() {
     case $# in
         0)
             flag=$default_flag
-            name=$default_name
+            todos=$default_todo
             ;;
 
         1)
@@ -131,12 +136,12 @@ parse_args() {
                 -o | --open | \
                 -s | --show )
                     flag=$1
-                    name=$default_name
+                    todos=$default_todo
                     ;;
 
                 *)
                     flag=$default_flag
-                    name=$1
+                    todos=$1
                     ;;
             esac
             ;;
@@ -148,37 +153,76 @@ parse_args() {
                 -o | --open | \
                 -s | --show )
                     flag=$1
-                    name=$2
+                    todos=$2
+                    ;;
+
+                -h | --help | \
+                -l | --list | \
+                -r | --rename )
+                    return $invalid_syntax
                     ;;
 
                 *)
-                    return $invalid_syntax
+                    flag=$default_flag
+                    todos="$1 $2"
                     ;;
             esac
             ;;
 
         3)
-            if [[ "$1" == "-r" || "$1" == "--rename" ]]; then
-                flag=$1
-                name=$2
-                name2=$3
-            else
-                return $invalid_syntax
-            fi
+            case $1 in
+                -o | --open | \
+                -r | --rename )
+                    flag=$1
+                    todos="$2 $3"
+                    ;;
+
+                -d | --delete | \
+                -h | --help | \
+                -l | --list | \
+                -n | --new | \
+                -s | --show )
+                    return $invalid_syntax
+                    ;;
+
+                *)
+                    flag=$default_flag
+                    todos="$@"
+            esac
             ;;
 
         *)
-            return $invalid_syntax
+            case $1 in
+                -o | --open)
+                    flag=$1
+                    shift
+                    todos="$@"
+                    ;;
+
+                -d | --delete | \
+                -h | --help | \
+                -l | --list | \
+                -n | --new | \
+                -r | --rename | \
+                -s | --show )
+                    return $invalid_syntax
+                    ;;
+
+                *)
+                    flag=$default_flag
+                    todos="$@"
+                    ;;
+            esac
             ;;
     esac
-    printf -- "$flag $name $name2"
+    printf -- "$flag $todos"
 }
 
 manage_todos() {
     cd $todos_dir
 
-    [[ -f "$default_name.md" ]] || new $default_name > /dev/null
-    [[ -f "$workspace_name.md" ]] || new $workspace_name > /dev/null
+    [[ -f "$default_todo.md" ]] || new $default_todo > /dev/null
+    [[ -f "$workspace_todo.md" ]] || new $workspace_todo > /dev/null
 
     case $1 in
         -d | --delete )
@@ -202,7 +246,8 @@ manage_todos() {
             ;;
 
         -o | --open )
-            open $2
+            shift
+            open "$@"
             exit_code=$?
             ;;
 
