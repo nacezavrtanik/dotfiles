@@ -83,7 +83,7 @@ rename() {
     elif [[ -f "$2.md" ]]; then
         echo "ERROR: *$2* already exists ..." >&2
         return $already_exists
-    elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
+    elif [[ ! $2 =~ ^[[:alnum:]]+$ ]]; then
         echo "ERROR: *$2* is not alphanumeric ..." >&2
         return $is_not_alphanumeric
     fi
@@ -126,107 +126,112 @@ parse_args() {
     case $# in
         0)
             flag=$default_flag
-            todos=$default_todo
+            todos=("$default_todo")
             ;;
 
         1)
-            case $1 in
+            case "$1" in
+                -d | --delete | \
+                -n | --new    | \
+                -r | --rename )
+                    return $invalid_syntax
+                    ;;
                 -h | --help | \
                 -l | --list | \
                 -o | --open | \
                 -s | --show )
                     flag=$1
-                    todos=$default_todo
+                    todos=("$default_todo")
                     ;;
-
                 *)
                     flag=$default_flag
-                    todos=$1
+                    todos=("$@")
                     ;;
             esac
             ;;
 
         2)
-            case $1 in
-                -d | --delete | \
-                -n | --new | \
-                -o | --open | \
-                -s | --show )
-                    flag=$1
-                    todos=$2
-                    ;;
-
-                -h | --help | \
-                -l | --list | \
+            case "$1" in
+                -h | --help   | \
+                -l | --list   | \
                 -r | --rename )
                     return $invalid_syntax
                     ;;
-
+                -d | --delete | \
+                -n | --new    | \
+                -o | --open   | \
+                -s | --show   )
+                    flag=$1
+                    shift
+                    todos=("$@")
+                    ;;
                 *)
                     flag=$default_flag
-                    todos="$1 $2"
+                    todos=("$@")
                     ;;
             esac
             ;;
 
         3)
-            case $1 in
-                -o | --open | \
-                -r | --rename )
-                    flag=$1
-                    todos="$2 $3"
-                    ;;
-
+            case "$1" in
                 -d | --delete | \
-                -h | --help | \
-                -l | --list | \
-                -n | --new | \
-                -s | --show )
+                -h | --help   | \
+                -l | --list   | \
+                -n | --new    | \
+                -s | --show   )
                     return $invalid_syntax
                     ;;
-
+                -o | --open   | \
+                -r | --rename )
+                    flag=$1
+                    shift
+                    todos=("$@")
+                    ;;
                 *)
                     flag=$default_flag
-                    todos="$@"
+                    todos=("$@")
+                    ;;
             esac
             ;;
 
         *)
             case $1 in
+                -d | --delete | \
+                -h | --help   | \
+                -l | --list   | \
+                -n | --new    | \
+                -r | --rename | \
+                -s | --show   )
+                    return $invalid_syntax
+                    ;;
                 -o | --open)
                     flag=$1
                     shift
-                    todos="$@"
+                    todos=("$@")
                     ;;
-
-                -d | --delete | \
-                -h | --help | \
-                -l | --list | \
-                -n | --new | \
-                -r | --rename | \
-                -s | --show )
-                    return $invalid_syntax
-                    ;;
-
                 *)
                     flag=$default_flag
-                    todos="$@"
+                    todos=("$@")
                     ;;
             esac
             ;;
     esac
-    printf -- "$flag $todos"
+
+    ARGS=("$flag")
+    ARGS+=("${todos[@]}")
 }
 
-manage_todos() {
-    cd $todos_dir
 
+main() {
+    cd $todos_dir
     [[ -f "$default_todo.md" ]] || new $default_todo > /dev/null
     [[ -f "$workspace_todo.md" ]] || new $workspace_todo > /dev/null
 
+    set -- "${ARGS[@]}"
+
     case $1 in
         -d | --delete )
-            delete $2
+            delete "$2"
             exit_code=$?
             ;;
 
@@ -241,7 +246,7 @@ manage_todos() {
             ;;
 
         -n | --new )
-            new $2
+            new "$2"
             exit_code=$?
             ;;
 
@@ -252,12 +257,13 @@ manage_todos() {
             ;;
 
         -r | --rename )
-            rename $2 $3
+            shift
+            rename "$@"
             exit_code=$?
             ;;
 
         -s | --show )
-            show $2
+            show "$2"
             exit_code=$?
             ;;
     esac
@@ -267,13 +273,11 @@ manage_todos() {
 }
 
 
-if args=$(parse_args "$@"); then
-    manage_todos $args
-else
-    cat << EOF >&2
-Invalid syntax ...
-Try 'todo --help' for more information.
-EOF
-    (exit $invalid_syntax)
+if ! parse_args "$@"; then
+    echo "ERROR: Invalid syntax ..." >&2
+    exit $invalid_syntax
 fi
+
+
+main
 
