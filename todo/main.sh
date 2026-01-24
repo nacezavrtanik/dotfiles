@@ -3,7 +3,7 @@
 invalid_syntax=1
 does_not_exist=11
 already_exists=12
-is_not_alphanumeric=13
+not_alphanumeric_with_spaces=13
 
 
 usage() {
@@ -28,36 +28,43 @@ Exit status:
   1     invalid syntax,
   11    does not exist,
   12    already exists,
-  13    is not alphanumeric.
+  13    not alphanumeric with spaces.
 EOF
 }
 
+arg_to_filename() {
+    printf '%s.md' "$1" | tr '[:space:]' '_'
+}
+
 delete() {
-    if [[ ! -f "$1.md" ]]; then
+    file=$(arg_to_filename "$1")
+    if [[ ! -f $file ]]; then
         echo "ERROR: *$1* does not exist ..." >&2
         return $does_not_exist
     fi
 
-    rm "$1.md"
+    rm $file
     echo "Deleted *$1*!"
 }
 
 list() {
-    ls -1 *.md | sed -e 's/^/* /' -e 's/.md$//' | less -F
+    ls -1 *.md | sed -e 's/^/* /' -e 's/_/ /g' -e 's/.md$//' | less -F
 }
 
 new() {
-    if [[ -f "$1.md" ]]; then
+    if [[ ! $1 =~ ^[\ [:alnum:]]+$ ]]; then
+        echo "ERROR: *$1* is not alphanumeric with spaces ..." >&2
+        return $not_alphanumeric_with_spaces
+    fi
+    file=$(arg_to_filename "$1")
+    if [[ -f $file ]]; then
         echo "ERROR: *$1* already exists ..." >&2
         return $already_exists
-    elif [[ ! $1 =~ ^[[:alnum:]]+$ ]]; then
-        echo "ERROR: *$1* is not alphanumeric ..." >&2
-        return $is_not_alphanumeric
     fi
 
-    title="$(echo "$1" | tr [:lower:] [:upper:])"
-    underline=$(echo $title | tr [:print:] '=')
-    printf '\n%s\n%s\n\n' "$title" "$underline" > "$1.md"
+    title="$(printf -- "$1" | tr [:lower:] [:upper:])"
+    underline=$(printf -- "$title" | tr [:print:] '=')
+    printf '\n%s\n%s\n\n' "$title" "$underline" > $file
 
     echo "Created *$1*!"
 }
@@ -65,11 +72,12 @@ new() {
 open() {
     todos=""
     while [[ $# -gt 0 ]]; do
-        if [[ ! -f "$1.md" ]]; then
+        file=$(arg_to_filename "$1")
+        if [[ ! -f $file ]]; then
             echo "ERROR: *$1* does not exist ..." >&2
             return $does_not_exist
         fi
-        todos="$todos $1.md"
+        todos="$todos $file"
         shift
     done
 
@@ -77,40 +85,44 @@ open() {
 }
 
 rename() {
-    if [[ ! -f "$1.md" ]]; then
+    old_file=$(arg_to_filename "$1")
+    if [[ ! -f $old_file ]]; then
         echo "ERROR: *$1* does not exist ..." >&2
         return $does_not_exist
-    elif [[ -f "$2.md" ]]; then
+    elif [[ ! $2 =~ ^[\ [:alnum:]]+$ ]]; then
+        echo "ERROR: *$2* is not alphanumeric with spaces ..." >&2
+        return $not_alphanumeric_with_spaces
+    fi
+    new_file=$(arg_to_filename "$2")
+    if [[ -f $new_file ]]; then
         echo "ERROR: *$2* already exists ..." >&2
         return $already_exists
-    elif [[ ! $2 =~ ^[[:alnum:]]+$ ]]; then
-        echo "ERROR: *$2* is not alphanumeric ..." >&2
-        return $is_not_alphanumeric
     fi
 
-    mv "$1.md" "$2.md"
-    old_title=$(echo $1 | tr [:lower:] [:upper:])
-    old_underline=$(head --bytes="${#old_title}" < /dev/zero | tr '\0' '=')
+    mv $old_file $new_file
+    old_title="$(printf -- "$1" | tr [:lower:] [:upper:])"
+    old_underline=$(printf -- "$old_title" | tr [:print:] '=')
     if
-        (sed -n -e '2p' "$2.md" | grep "^$old_title$" > /dev/null) &&
-        (sed -n -e '3p' "$2.md" | grep "^$old_underline$" > /dev/null)
+        (sed -n -e '2p' $new_file | grep "^$old_title$" > /dev/null) &&
+        (sed -n -e '3p' $new_file | grep "^$old_underline$" > /dev/null)
     then
-        new_title=$(echo $2 | tr [:lower:] [:upper:])
-        new_underline=$(head --bytes="${#new_title}" < /dev/zero | tr '\0' '=')
-        sed -i -e "2 s/^$old_title$/$new_title/" "$2.md"
-        sed -i -e "3 s/^$old_underline$/$new_underline/" "$2.md"
+        new_title="$(printf -- "$2" | tr [:lower:] [:upper:])"
+        new_underline=$(printf -- "$new_title" | tr [:print:] '=')
+        sed -i -e "2 s/^$old_title$/$new_title/" $new_file
+        sed -i -e "3 s/^$old_underline$/$new_underline/" $new_file
     fi
 
     echo "*$1* renamed to *$2*!"
 }
 
 show() {
-    if [[ ! -f "$1.md" ]]; then
+    file=$(arg_to_filename "$1")
+    if [[ ! -f $file ]]; then
         echo "ERROR: *$1* does not exist ..." >&2
         return $does_not_exist
     fi
 
-    less -F "$1.md"
+    less -F $file
 }
 
 
