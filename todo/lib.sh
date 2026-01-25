@@ -9,27 +9,7 @@ readonly workspace_todo=workspace
 _arg_to_filename() { printf '%s.md' "$1" | tr '[:space:]' '_' ; }
 
 
-_delete() {
-    while [[ $# -gt 0 ]]; do
-        local file=$(_arg_to_filename "$1")
-        if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
-            return $does_not_exist
-        fi
-
-        rm $file
-        printf 'Deleted *%s*!\n' "$1"
-        shift
-    done
-}
-
-
-_list() {
-    ls -1 *.md | sed -e 's/^/* /' -e 's/_/ /g' -e 's/.md$//' | less -F
-}
-
-
-_new() {
+_create() {
     while [[ $# -gt 0 ]]; do
         if [[ ! $1 =~ ^[\ [:alnum:]]+$ ]]; then
             printf 'ERROR: *%s* is not alphanumeric with spaces ...\n' "$1" >&2
@@ -48,6 +28,26 @@ _new() {
         printf 'Created *%s*!\n' "$1"
         shift
     done
+}
+
+
+_delete() {
+    while [[ $# -gt 0 ]]; do
+        local file=$(_arg_to_filename "$1")
+        if [[ ! -f $file ]]; then
+            printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
+            return $does_not_exist
+        fi
+
+        rm $file
+        printf 'Deleted *%s*!\n' "$1"
+        shift
+    done
+}
+
+
+_list() {
+    ls -1 *.md | sed -e 's/^/* /' -e 's/_/ /g' -e 's/.md$//' | less -F
 }
 
 
@@ -118,12 +118,13 @@ _show() {
 todo_manage() {
     local todos_dir=~/dotfiles/todo/.todos/; mkdir --parents $todos_dir
     local initial_dir="$(pwd)"; cd $todos_dir; trap "cd $initial_dir" EXIT
-    _new $default_todo $workspace_todo > /dev/null 2>&1
+    _create $default_todo > /dev/null 2>&1
+    _create $workspace_todo > /dev/null 2>&1
 
     local -A flags_to_commands=(
+        [-c]=_create [--create]=_create
         [-d]=_delete [--delete]=_delete
         [-l]=_list   [--list]=_list
-        [-n]=_new    [--new]=_new
         [-o]=_open   [--open]=_open
         [-r]=_rename [--rename]=_rename
         [-s]=_show   [--show]=_show

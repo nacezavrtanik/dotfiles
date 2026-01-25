@@ -23,7 +23,7 @@ setup_sessions() {
 
     s=dots
     cd ~/dotfiles
-    todo --list | grep -xq '\* dotfiles' || todo --new dotfiles
+    todo --list | grep -xq '\* dotfiles' || todo --create dotfiles
     tmux new-session -d -s "$s"
     tmux new-window -t "$s":2
     tmux new-window -t "$s":3 -n todo

@@ -15,10 +15,10 @@ Usage: todo [OPTION]
 Manage TODOs.
 
 Options:
+  -c, --create TODO...    create new TODOs
   -d, --delete TODO...    delete TODOs
   -h, --help              show this help
   -l, --list              list all TODOs
-  -n, --new TODO...       create new TODOs
   -o, --open [TODO]...    open TODOs in Neovim;
                             this is the default option if OPTION is not given;
                             if no TODOs are given, the default TODO is opened
@@ -45,8 +45,8 @@ _parse_args() {
 
         1)
             case "$1" in
+                -c | --create | \
                 -d | --delete | \
-                -n | --new    | \
                 -r | --rename )
                     return $invalid_usage
                     ;;
@@ -71,8 +71,8 @@ _parse_args() {
                 -r | --rename )
                     return $invalid_usage
                     ;;
+                -c | --create | \
                 -d | --delete | \
-                -n | --new    | \
                 -o | --open   | \
                 -s | --show   )
                     flag=$1
@@ -92,8 +92,8 @@ _parse_args() {
                 -l | --list   )
                     return $invalid_usage
                     ;;
+                -c | --create | \
                 -d | --delete | \
-                -n | --new    | \
                 -o | --open   | \
                 -r | --rename | \
                 -s | --show   )
@@ -115,8 +115,8 @@ _parse_args() {
                 -r | --rename )
                     return $invalid_usage
                     ;;
+                -c | --create | \
                 -d | --delete | \
-                -n | --new    | \
                 -o | --open   | \
                 -s | --show   )
                     flag=$1
