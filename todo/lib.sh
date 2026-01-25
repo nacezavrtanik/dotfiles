@@ -122,38 +122,18 @@ todo_manage() {
     cd $todos_dir
     _new $default_todo $workspace_todo > /dev/null 2>&1
 
-    local exit_code
-    case $1 in
-        -d | --delete )
-            shift
-            _delete "$@"
-            exit_code=$?
-            ;;
-        -l | --list )
-            _list
-            exit_code=$?
-            ;;
-        -n | --new )
-            shift
-            _new "$@"
-            exit_code=$?
-            ;;
-        -o | --open )
-            shift
-            _open "$@"
-            exit_code=$?
-            ;;
-        -r | --rename )
-            shift
-            _rename "$@"
-            exit_code=$?
-            ;;
-        -s | --show )
-            shift
-            _show "$@"
-            exit_code=$?
-            ;;
-    esac
+    local -A flags_to_commands=(
+        [-d]=_delete [--delete]=_delete
+        [-l]=_list   [--list]=_list
+        [-n]=_new    [--new]=_new
+        [-o]=_open   [--open]=_open
+        [-r]=_rename [--rename]=_rename
+        [-s]=_show   [--show]=_show
+    )
+    local manage="${flags_to_commands[$1]}"
+    shift
+    $manage "$@"
+    local exit_code=$?
 
     cd "$initial_dir"
     return $exit_code
