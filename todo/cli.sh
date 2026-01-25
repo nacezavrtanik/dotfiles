@@ -109,7 +109,7 @@ _parse_args() {
 
 cli() {
     if ! _parse_args "$@"; then
-        echo "ERROR: Invalid syntax ..." >&2
+        printf 'ERROR: Invalid syntax ...\n' >&2
         return $invalid_syntax
     fi
     manage_todos "$flag" "${todos[@]}"

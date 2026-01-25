@@ -44,12 +44,12 @@ _delete() {
     while [[ $# -gt 0 ]]; do
         local file=$(_arg_to_filename "$1")
         if [[ ! -f $file ]]; then
-            echo "ERROR: *$1* does not exist ..." >&2
+            printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
             return $does_not_exist
         fi
 
         rm $file
-        echo "Deleted *$1*!"
+        printf 'Deleted *%s*!\n' "$1"
         shift
     done
 }
@@ -63,12 +63,12 @@ _list() {
 _new() {
     while [[ $# -gt 0 ]]; do
         if [[ ! $1 =~ ^[\ [:alnum:]]+$ ]]; then
-            echo "ERROR: *$1* is not alphanumeric with spaces ..." >&2
+            printf 'ERROR: *%s* is not alphanumeric with spaces ...\n' "$1" >&2
             return $not_alphanumeric_with_spaces
         fi
         local file=$(_arg_to_filename "$1")
         if [[ -f $file ]]; then
-            echo "ERROR: *$1* already exists ..." >&2
+            printf 'ERROR: *%s* already exists ...\n' "$1" >&2
             return $already_exists
         fi
 
@@ -76,7 +76,7 @@ _new() {
         local underline=$(printf -- "$title" | tr [:print:] '=')
         printf '\n%s\n%s\n\n' "$title" "$underline" > $file
 
-        echo "Created *$1*!"
+        printf 'Created *%s*!\n' "$1"
         shift
     done
 }
@@ -87,7 +87,7 @@ _open() {
     while [[ $# -gt 0 ]]; do
         local file=$(_arg_to_filename "$1")
         if [[ ! -f $file ]]; then
-            echo "ERROR: *$1* does not exist ..." >&2
+            printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
             return $does_not_exist
         fi
         todos="$todos $file"
@@ -101,15 +101,15 @@ _open() {
 _rename() {
     local old_file=$(_arg_to_filename "$1")
     if [[ ! -f $old_file ]]; then
-        echo "ERROR: *$1* does not exist ..." >&2
+        printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
         return $does_not_exist
     elif [[ ! $2 =~ ^[\ [:alnum:]]+$ ]]; then
-        echo "ERROR: *$2* is not alphanumeric with spaces ..." >&2
+        printf 'ERROR: *%s* is not alphanumeric with spaces ...\n' "$2" >&2
         return $not_alphanumeric_with_spaces
     fi
     local new_file=$(_arg_to_filename "$2")
     if [[ -f $new_file ]]; then
-        echo "ERROR: *$2* already exists ..." >&2
+        printf 'ERROR: *%s* already exists ...\n' "$2" >&2
         return $already_exists
     fi
 
@@ -126,7 +126,7 @@ _rename() {
         sed -i -e "3 s/^$old_underline$/$new_underline/" $new_file
     fi
 
-    echo "*$1* renamed to *$2*!"
+    printf '*%s* renamed to *%s*!\n' "$1" "$2"
 }
 
 
@@ -135,7 +135,7 @@ _show() {
     while [[ $# -gt 0 ]]; do
         local file=$(_arg_to_filename "$1")
         if [[ ! -f $file ]]; then
-            echo "ERROR: *$1* does not exist ..." >&2
+            printf 'ERROR: *%s* does not exist ...\n' "$1" >&2
             return $does_not_exist
         fi
         todos="$todos $file"
