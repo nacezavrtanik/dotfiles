@@ -1,5 +1,3 @@
-#!/bin/bash
-
 . ~/dotfiles/todo/lib.sh
 
 

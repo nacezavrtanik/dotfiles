@@ -1,5 +1,3 @@
-#!/bin/bash
-
 readonly invalid_syntax=1
 readonly does_not_exist=11
 readonly already_exists=12
