@@ -19,16 +19,16 @@ Usage: todo [OPTION]
 Manage TODOs.
 
 Options:
-  -d, --delete TODO       delete TODO
+  -d, --delete TODO...    delete TODOs
   -h, --help              show this help and exit
   -l, --list              list all TODOs
-  -n, --new TODO          create new TODO
+  -n, --new TODO...       create new TODOs
   -o, --open [TODO]...    open TODOs in Neovim;
                             this is the default option if OPTION is not given;
                             if no TODOs are given, the default TODO is opened
   -r, --rename OLD NEW    rename OLD to NEW
-  -s, --show [TODO]       show TODO in the terminal;
-                            if TODO is not given, the default TODO is shown
+  -s, --show [TODO]...    show TODOs in the terminal;
+                            if no TODOs are given, the default TODO is shown
 
 Exit status:
   0     everything OK,
@@ -41,14 +41,17 @@ EOF
 
 
 _delete() {
-    local file=$(_arg_to_filename "$1")
-    if [[ ! -f $file ]]; then
-        echo "ERROR: *$1* does not exist ..." >&2
-        return $does_not_exist
-    fi
+    while [[ $# -gt 0 ]]; do
+        local file=$(_arg_to_filename "$1")
+        if [[ ! -f $file ]]; then
+            echo "ERROR: *$1* does not exist ..." >&2
+            return $does_not_exist
+        fi
 
-    rm $file
-    echo "Deleted *$1*!"
+        rm $file
+        echo "Deleted *$1*!"
+        shift
+    done
 }
 
 
@@ -58,21 +61,24 @@ _list() {
 
 
 _new() {
-    if [[ ! $1 =~ ^[\ [:alnum:]]+$ ]]; then
-        echo "ERROR: *$1* is not alphanumeric with spaces ..." >&2
-        return $not_alphanumeric_with_spaces
-    fi
-    local file=$(_arg_to_filename "$1")
-    if [[ -f $file ]]; then
-        echo "ERROR: *$1* already exists ..." >&2
-        return $already_exists
-    fi
+    while [[ $# -gt 0 ]]; do
+        if [[ ! $1 =~ ^[\ [:alnum:]]+$ ]]; then
+            echo "ERROR: *$1* is not alphanumeric with spaces ..." >&2
+            return $not_alphanumeric_with_spaces
+        fi
+        local file=$(_arg_to_filename "$1")
+        if [[ -f $file ]]; then
+            echo "ERROR: *$1* already exists ..." >&2
+            return $already_exists
+        fi
 
-    local title="$(printf -- "$1" | tr [:lower:] [:upper:])"
-    local underline=$(printf -- "$title" | tr [:print:] '=')
-    printf '\n%s\n%s\n\n' "$title" "$underline" > $file
+        local title="$(printf -- "$1" | tr [:lower:] [:upper:])"
+        local underline=$(printf -- "$title" | tr [:print:] '=')
+        printf '\n%s\n%s\n\n' "$title" "$underline" > $file
 
-    echo "Created *$1*!"
+        echo "Created *$1*!"
+        shift
+    done
 }
 
 
@@ -125,13 +131,18 @@ _rename() {
 
 
 _show() {
-    local file=$(_arg_to_filename "$1")
-    if [[ ! -f $file ]]; then
-        echo "ERROR: *$1* does not exist ..." >&2
-        return $does_not_exist
-    fi
+    local todos=""
+    while [[ $# -gt 0 ]]; do
+        local file=$(_arg_to_filename "$1")
+        if [[ ! -f $file ]]; then
+            echo "ERROR: *$1* does not exist ..." >&2
+            return $does_not_exist
+        fi
+        todos="$todos $file"
+        shift
+    done
 
-    less -F $file
+    cat $todos | less -F
 }
 
 
@@ -140,13 +151,13 @@ manage_todos() {
     local todos_dir=~/dotfiles/todo/.todos/
     mkdir --parents $todos_dir
     cd $todos_dir
-    _new $default_todo > /dev/null 2>&1
-    _new $workspace_todo > /dev/null 2>&1
+    _new $default_todo $workspace_todo > /dev/null 2>&1
 
     local exit_code
     case $1 in
         -d | --delete )
-            _delete "$2"
+            shift
+            _delete "$@"
             exit_code=$?
             ;;
         -h | --help )
@@ -158,7 +169,8 @@ manage_todos() {
             exit_code=$?
             ;;
         -n | --new )
-            _new "$2"
+            shift
+            _new "$@"
             exit_code=$?
             ;;
         -o | --open )
@@ -172,7 +184,8 @@ manage_todos() {
             exit_code=$?
             ;;
         -s | --show )
-            _show "$2"
+            shift
+            _show "$@"
             exit_code=$?
             ;;
     esac

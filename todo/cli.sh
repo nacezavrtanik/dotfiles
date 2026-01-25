@@ -62,15 +62,15 @@ _parse_args() {
 
         3)
             case "$1" in
-                -d | --delete | \
                 -h | --help   | \
-                -l | --list   | \
-                -n | --new    | \
-                -s | --show   )
+                -l | --list   )
                     return $invalid_syntax
                     ;;
+                -d | --delete | \
+                -n | --new    | \
                 -o | --open   | \
-                -r | --rename )
+                -r | --rename | \
+                -s | --show   )
                     flag=$1
                     shift
                     todos=("$@")
@@ -84,15 +84,15 @@ _parse_args() {
 
         *)
             case $1 in
-                -d | --delete | \
                 -h | --help   | \
                 -l | --list   | \
-                -n | --new    | \
-                -r | --rename | \
-                -s | --show   )
+                -r | --rename )
                     return $invalid_syntax
                     ;;
-                -o | --open)
+                -d | --delete | \
+                -n | --new    | \
+                -o | --open   | \
+                -s | --show   )
                     flag=$1
                     shift
                     todos=("$@")
