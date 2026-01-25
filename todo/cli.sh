@@ -1,11 +1,39 @@
 . ~/dotfiles/todo/lib.sh
 
 
+readonly invalid_usage=2
 readonly default_flag=--open
 
 
 flag=$default_flag
 todos=($default_todo)
+
+
+_usage() {
+    cat << EOF
+Usage: todo [OPTION]
+Manage TODOs.
+
+Options:
+  -d, --delete TODO...    delete TODOs
+  -h, --help              show this help
+  -l, --list              list all TODOs
+  -n, --new TODO...       create new TODOs
+  -o, --open [TODO]...    open TODOs in Neovim;
+                            this is the default option if OPTION is not given;
+                            if no TODOs are given, the default TODO is opened
+  -r, --rename OLD NEW    rename OLD to NEW
+  -s, --show [TODO]...    show TODOs in the terminal;
+                            if no TODOs are given, the default TODO is shown
+
+Exit status:
+EOF
+printf '  %-2s    %s\n' "0" "success,"
+printf '  %-2s    %s\n' "$invalid_usage" "invalid usage,"
+printf '  %-2s    %s\n' "$not_alphanumeric_with_spaces" "not alphanumeric with spaces,"
+printf '  %-2s    %s\n' "$does_not_exist" "does not exist,"
+printf '  %-2s    %s\n' "$already_exists" "already exists."
+}
 
 
 _parse_args() {
@@ -20,7 +48,7 @@ _parse_args() {
                 -d | --delete | \
                 -n | --new    | \
                 -r | --rename )
-                    return $invalid_syntax
+                    return $invalid_usage
                     ;;
                 -h | --help | \
                 -l | --list | \
@@ -41,7 +69,7 @@ _parse_args() {
                 -h | --help   | \
                 -l | --list   | \
                 -r | --rename )
-                    return $invalid_syntax
+                    return $invalid_usage
                     ;;
                 -d | --delete | \
                 -n | --new    | \
@@ -62,7 +90,7 @@ _parse_args() {
             case "$1" in
                 -h | --help   | \
                 -l | --list   )
-                    return $invalid_syntax
+                    return $invalid_usage
                     ;;
                 -d | --delete | \
                 -n | --new    | \
@@ -85,7 +113,7 @@ _parse_args() {
                 -h | --help   | \
                 -l | --list   | \
                 -r | --rename )
-                    return $invalid_syntax
+                    return $invalid_usage
                     ;;
                 -d | --delete | \
                 -n | --new    | \
@@ -105,11 +133,16 @@ _parse_args() {
 }
 
 
-cli() {
+todo_cli() {
     if ! _parse_args "$@"; then
-        printf 'ERROR: Invalid syntax ...\n' >&2
-        return $invalid_syntax
+        printf 'ERROR: Invalid usage ...\n' >&2
+        return $invalid_usage
     fi
-    manage_todos "$flag" "${todos[@]}"
+
+    if [[ $flag == -h || $flag == --help ]]; then
+        _usage
+    else
+        todo_manage "$flag" "${todos[@]}"
+    fi
 }
 

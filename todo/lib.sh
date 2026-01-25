@@ -1,41 +1,12 @@
-readonly invalid_syntax=1
-readonly does_not_exist=11
-readonly already_exists=12
-readonly not_alphanumeric_with_spaces=13
-
+readonly not_alphanumeric_with_spaces=65
+readonly does_not_exist=66
+readonly already_exists=73
 
 readonly default_todo=todo
 readonly workspace_todo=workspace
 
 
 _arg_to_filename() { printf '%s.md' "$1" | tr '[:space:]' '_' ; }
-
-
-_usage() {
-    cat << EOF
-Usage: todo [OPTION]
-Manage TODOs.
-
-Options:
-  -d, --delete TODO...    delete TODOs
-  -h, --help              show this help and exit
-  -l, --list              list all TODOs
-  -n, --new TODO...       create new TODOs
-  -o, --open [TODO]...    open TODOs in Neovim;
-                            this is the default option if OPTION is not given;
-                            if no TODOs are given, the default TODO is opened
-  -r, --rename OLD NEW    rename OLD to NEW
-  -s, --show [TODO]...    show TODOs in the terminal;
-                            if no TODOs are given, the default TODO is shown
-
-Exit status:
-  0     everything OK,
-  1     invalid syntax,
-  11    does not exist,
-  12    already exists,
-  13    not alphanumeric with spaces.
-EOF
-}
 
 
 _delete() {
@@ -144,7 +115,7 @@ _show() {
 }
 
 
-manage_todos() {
+todo_manage() {
     local initial_dir="$(pwd)"
     local todos_dir=~/dotfiles/todo/.todos/
     mkdir --parents $todos_dir
@@ -156,10 +127,6 @@ manage_todos() {
         -d | --delete )
             shift
             _delete "$@"
-            exit_code=$?
-            ;;
-        -h | --help )
-            _usage
             exit_code=$?
             ;;
         -l | --list )
