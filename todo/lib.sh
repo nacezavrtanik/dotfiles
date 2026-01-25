@@ -116,10 +116,8 @@ _show() {
 
 
 todo_manage() {
-    local initial_dir="$(pwd)"
-    local todos_dir=~/dotfiles/todo/.todos/
-    mkdir --parents $todos_dir
-    cd $todos_dir
+    local todos_dir=~/dotfiles/todo/.todos/; mkdir --parents $todos_dir
+    local initial_dir="$(pwd)"; cd $todos_dir; trap "cd $initial_dir" EXIT
     _new $default_todo $workspace_todo > /dev/null 2>&1
 
     local -A flags_to_commands=(
@@ -133,9 +131,5 @@ todo_manage() {
     local manage="${flags_to_commands[$1]}"
     shift
     $manage "$@"
-    local exit_code=$?
-
-    cd "$initial_dir"
-    return $exit_code
 }
 
