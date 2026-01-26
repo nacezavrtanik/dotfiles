@@ -80,6 +80,7 @@ fi
 git config --global core.excludesfile ~/dotfiles/.gitignore_global
 git config --global core.editor nvim
 git config --global init.defaultbranch main
+git config --global advice.statushints false
 git config --global advice.detachedhead false
 git config --global diff.tool nvimdiff
 git config --global difftool.prompt false
