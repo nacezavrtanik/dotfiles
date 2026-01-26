@@ -85,14 +85,13 @@ _rename() {
     mv $old_file $new_file
     local old_title="$(printf -- "$1" | tr [:lower:] [:upper:])"
     local old_underline=$(printf -- "$old_title" | tr [:print:] '=')
-    if
-        (sed -n -e '2p' $new_file | grep "^$old_title$" > /dev/null) &&
-        (sed -n -e '3p' $new_file | grep "^$old_underline$" > /dev/null)
+    if cmp --quiet \
+        <(head -n 3 $new_file) \
+        <(printf '\n%s\n%s\n' "$old_title" "$old_underline")
     then
         local new_title="$(printf -- "$2" | tr [:lower:] [:upper:])"
         local new_underline=$(printf -- "$new_title" | tr [:print:] '=')
-        sed -i -e "2 s/^$old_title$/$new_title/" $new_file
-        sed -i -e "3 s/^$old_underline$/$new_underline/" $new_file
+        sed -i "2,3c $new_title\n$new_underline" $new_file
     fi
 
     printf '*%s* renamed to *%s*!\n' "$1" "$2"
