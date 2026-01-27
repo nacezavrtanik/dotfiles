@@ -12,7 +12,12 @@ todos=($default_todo)
 _usage() {
     cat << EOF
 Usage: todo [OPTION]
-Manage TODOs.
+Manage TODOs stored as Markdown files.
+
+The TODOs \`todo\` (default) and \`workspace\` are created automatically.
+
+TODO names may contain alphanumeric characters, dashes (-), underscores (_), and
+spaces ( ). Underscores and spaces are interchangeable.
 
 Options:
   -c, --create TODO...    create new TODOs
@@ -20,8 +25,7 @@ Options:
   -h, --help              show this help message
   -l, --list              list all TODOs (pretty format)
   -L, --list-raw          list all TODOs (pipe-friendly format)
-  -o, --open [TODO]...    open TODOs in Neovim;
-                            this is the default option if OPTION is not given;
+  -o, --open [TODO]...    open TODOs in Neovim (default action);
                             if no TODOs are given, the default TODO is opened
   -r, --rename OLD NEW    rename OLD to NEW
   -s, --show [TODO]...    show TODOs in the terminal;
@@ -29,11 +33,11 @@ Options:
 
 Exit status:
 EOF
-printf '  %-2s    %s\n' "0" "success,"
-printf '  %-2s    %s\n' "$invalid_usage" "invalid usage,"
-printf '  %-2s    %s\n' "$not_alphanumeric_with_spaces" "not alphanumeric with spaces,"
-printf '  %-2s    %s\n' "$does_not_exist" "does not exist,"
-printf '  %-2s    %s\n' "$already_exists" "already exists."
+printf '  %-2s    %s\n' "0" "success"
+printf '  %-2s    %s\n' "$invalid_usage" "invalid usage"
+printf '  %-2s    %s\n' "$invalid_name" "invalid name"
+printf '  %-2s    %s\n' "$does_not_exist" "does not exist"
+printf '  %-2s    %s\n' "$already_exists" "already exists"
 }
 
 
