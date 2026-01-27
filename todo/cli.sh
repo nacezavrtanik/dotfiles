@@ -17,8 +17,9 @@ Manage TODOs.
 Options:
   -c, --create TODO...    create new TODOs
   -d, --delete TODO...    delete TODOs
-  -h, --help              show this help
-  -l, --list              list all TODOs
+  -h, --help              show this help message
+  -l, --list              list all TODOs (pretty format)
+  -L, --list-raw          list all TODOs (pipe-friendly format)
   -o, --open [TODO]...    open TODOs in Neovim;
                             this is the default option if OPTION is not given;
                             if no TODOs are given, the default TODO is opened
@@ -50,10 +51,11 @@ _parse_args() {
                 -r | --rename )
                     return $invalid_usage
                     ;;
-                -h | --help | \
-                -l | --list | \
-                -o | --open | \
-                -s | --show )
+                -h | --help     | \
+                -l | --list     | \
+                -L | --list-raw | \
+                -o | --open     | \
+                -s | --show     )
                     flag=$1
                     todos=($default_todo)
                     ;;
@@ -66,9 +68,10 @@ _parse_args() {
 
         2)
             case "$1" in
-                -h | --help   | \
-                -l | --list   | \
-                -r | --rename )
+                -h | --help     | \
+                -l | --list     | \
+                -L | --list-raw | \
+                -r | --rename   )
                     return $invalid_usage
                     ;;
                 -c | --create | \
@@ -88,8 +91,9 @@ _parse_args() {
 
         3)
             case "$1" in
-                -h | --help   | \
-                -l | --list   )
+                -h | --help     | \
+                -l | --list     | \
+                -L | --list-raw )
                     return $invalid_usage
                     ;;
                 -c | --create | \
@@ -110,9 +114,10 @@ _parse_args() {
 
         *)
             case $1 in
-                -h | --help   | \
-                -l | --list   | \
-                -r | --rename )
+                -h | --help     | \
+                -l | --list     | \
+                -L | --list-raw | \
+                -r | --rename   )
                     return $invalid_usage
                     ;;
                 -c | --create | \

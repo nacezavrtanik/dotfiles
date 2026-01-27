@@ -51,6 +51,11 @@ _list() {
 }
 
 
+_list_raw() {
+    ls -1 *.md | sed -e 's/.md$//' | less -F
+}
+
+
 _open() {
     local todos=""
     while [[ $# -gt 0 ]]; do
@@ -121,12 +126,13 @@ todo_manage() {
     _create $workspace_todo > /dev/null 2>&1
 
     local -A flags_to_commands=(
-        [-c]=_create [--create]=_create
-        [-d]=_delete [--delete]=_delete
-        [-l]=_list   [--list]=_list
-        [-o]=_open   [--open]=_open
-        [-r]=_rename [--rename]=_rename
-        [-s]=_show   [--show]=_show
+        [-c]=_create     [--create]=_create
+        [-d]=_delete     [--delete]=_delete
+        [-l]=_list       [--list]=_list
+        [-L]=_list_raw   [--list-raw]=_list_raw
+        [-o]=_open       [--open]=_open
+        [-r]=_rename     [--rename]=_rename
+        [-s]=_show       [--show]=_show
     )
     local manage="${flags_to_commands[$1]}"
     shift
