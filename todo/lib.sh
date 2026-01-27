@@ -127,8 +127,9 @@ _show() {
 
 
 todo_manage() {
-    local todos_dir=~/dotfiles/todo/.todos/; mkdir --parents $todos_dir
-    local initial_dir="$(pwd)"; cd $todos_dir; trap "cd $initial_dir" EXIT
+    local todos_dir=~/dotfiles/todo/.todos/
+    mkdir --parents $todos_dir
+    cd $todos_dir
     _create $default_todo > /dev/null 2>&1
     _create $workspace_todo > /dev/null 2>&1
 
