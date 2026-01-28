@@ -46,6 +46,10 @@ vim.o.expandtab = true
 
 vim.opt.diffopt = { "vertical", "closeoff", "hiddenoff", "filler" }
 
+vim.keymap.set({ "n", "v" }, "<Leader>8", function()
+  vim.o.colorcolumn = (vim.o.colorcolumn == "") and "80" or ""
+end)
+
 vim.keymap.set({ "n", "v" }, "<Leader>y", '"+y')
 vim.keymap.set({ "n", "v" }, "<Leader>Y", '"+Y', { remap = true })
 vim.keymap.set({ "n", "v" }, "<Leader>p", '"+p')
