@@ -1,9 +1,11 @@
-readonly TODOLIB_INVALID_NAME=65
-readonly TODOLIB_DOES_NOT_EXIST=66
-readonly TODOLIB_ALREADY_EXISTS=73
-
-readonly TODOLIB_DEFAULT_TODO=todo
-readonly _TODOLIB_WORKSPACE_TODO=workspace
+if ! [[ -v _TODOLIB_SOURCED ]]; then
+    _TODOLIB_SOURCED=true
+    readonly TODOLIB_INVALID_NAME=65
+    readonly TODOLIB_DOES_NOT_EXIST=66
+    readonly TODOLIB_ALREADY_EXISTS=73
+    readonly TODOLIB_DEFAULT_TODO=todo
+    readonly _TODOLIB_WORKSPACE_TODO=workspace
+fi
 
 
 _todolib_arg_to_name() { printf -- "$1" | tr '_' ' ' ; }

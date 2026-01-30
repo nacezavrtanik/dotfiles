@@ -1,8 +1,11 @@
 . ~/dotfiles/todo/lib.sh
 
 
-readonly _TODOCLI_INVALID_USAGE=2
-readonly _TODOCLI_DEFAULT_FLAG=--open
+if ! [[ -v _TODOCLI_SOURCED ]]; then
+    _TODOCLI_SOURCED=true
+    readonly _TODOCLI_INVALID_USAGE=2
+    readonly _TODOCLI_DEFAULT_FLAG=--open
+fi
 
 
 _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
