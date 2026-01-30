@@ -1,11 +1,5 @@
+. ~/dotfiles/todo/exitcodes.sh
 . ~/dotfiles/todo/lib.sh
-
-
-if ! [[ -v _TODOCLI_SOURCED ]]; then
-    _TODOCLI_SOURCED=true
-    readonly _TODOCLI_INVALID_USAGE=2
-    readonly _TODOCLI_INVALID_NAME=65
-fi
 
 
 _todocli_usage() {
@@ -32,11 +26,11 @@ Options:
 
 Exit status:
 EOF
-printf '  %-2s    %s\n' "0" "success"
-printf '  %-2s    %s\n' "$_TODOCLI_INVALID_USAGE" "invalid usage"
-printf '  %-2s    %s\n' "$_TODOCLI_INVALID_NAME" "invalid name"
-printf '  %-2s    %s\n' "$TODOLIB_DOES_NOT_EXIST" "does not exist"
-printf '  %-2s    %s\n' "$TODOLIB_ALREADY_EXISTS" "already exists"
+printf '  %-2s    %s\n' "$TODOEXITCODES_SUCCESS"        "success"
+printf '  %-2s    %s\n' "$TODOEXITCODES_INVALID_USAGE"  "invalid usage"
+printf '  %-2s    %s\n' "$TODOEXITCODES_INVALID_NAME"   "invalid name"
+printf '  %-2s    %s\n' "$TODOEXITCODES_DOES_NOT_EXIST" "does not exist"
+printf '  %-2s    %s\n' "$TODOEXITCODES_ALREADY_EXISTS" "already exists"
 }
 
 
@@ -145,7 +139,7 @@ _todocli_parse_args() {
 
     if $invalid_usage; then
         printf 'ERROR: Invalid usage ...\n' >&2
-        return $_TODOCLI_INVALID_USAGE
+        return $TODOEXITCODES_INVALID_USAGE
     fi
 
     local names name value
@@ -153,7 +147,7 @@ _todocli_parse_args() {
         name="$(printf -- "$value" | tr '[:space:]' '_')"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
-            return $_TODOCLI_INVALID_NAME
+            return $TODOEXITCODES_INVALID_NAME
         else names="$names $name"
         fi
     done

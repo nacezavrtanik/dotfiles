@@ -1,7 +1,8 @@
+. ~/dotfiles/todo/exitcodes.sh
+
+
 if ! [[ -v _TODOLIB_SOURCED ]]; then
     _TODOLIB_SOURCED=true
-    readonly TODOLIB_DOES_NOT_EXIST=66
-    readonly TODOLIB_ALREADY_EXISTS=73
     readonly TODOLIB_DEFAULT_TODO=todo
     readonly _TODOLIB_WORKSPACE_TODO=workspace
 fi
@@ -16,7 +17,7 @@ _todolib_create() {
         local name="$(_todolib_name_to_name_with_spaces "$1")"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
-            return $TODOLIB_ALREADY_EXISTS
+            return $TODOEXITCODES_ALREADY_EXISTS
         fi
 
         local title="$(printf -- "$name" | tr [:lower:] [:upper:])"
@@ -34,7 +35,7 @@ _todolib_delete() {
         local name="$(_todolib_name_to_name_with_spaces "$1")"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOLIB_DOES_NOT_EXIST
+            return $TODOEXITCODES_DOES_NOT_EXIST
         fi
 
         rm -- $file
@@ -61,7 +62,7 @@ _todolib_open() {
         if [[ ! -f $file ]]; then
             local name="$(_todolib_name_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOLIB_DOES_NOT_EXIST
+            return $TODOEXITCODES_DOES_NOT_EXIST
         fi
         files="$files $file"
         shift
@@ -76,13 +77,13 @@ _todolib_rename() {
     local old_name="$(_todolib_name_to_name_with_spaces "$1")"
     if [[ ! -f $old_file ]]; then
         printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
-        return $TODOLIB_DOES_NOT_EXIST
+        return $TODOEXITCODES_DOES_NOT_EXIST
     fi
     local new_file="$2.md"
     local new_name="$(_todolib_name_to_name_with_spaces "$2")"
     if [[ -f $new_file ]]; then
         printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
-        return $TODOLIB_ALREADY_EXISTS
+        return $TODOEXITCODES_ALREADY_EXISTS
     fi
 
     mv -- $old_file $new_file
@@ -108,7 +109,7 @@ _todolib_show() {
         if [[ ! -f $file ]]; then
             local name="$(_todolib_name_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOLIB_DOES_NOT_EXIST
+            return $TODOEXITCODES_DOES_NOT_EXIST
         fi
         files="$files $file"
         shift
