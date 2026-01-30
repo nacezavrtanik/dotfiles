@@ -4,12 +4,8 @@
 if ! [[ -v _TODOCLI_SOURCED ]]; then
     _TODOCLI_SOURCED=true
     readonly _TODOCLI_INVALID_USAGE=2
-    readonly _TODOCLI_DEFAULT_FLAG=--open
+    readonly _TODOCLI_INVALID_NAME=65
 fi
-
-
-_TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-_TODOCLI_TODOS=($TODOLIB_DEFAULT_TODO)
 
 
 _todocli_usage() {
@@ -38,17 +34,21 @@ Exit status:
 EOF
 printf '  %-2s    %s\n' "0" "success"
 printf '  %-2s    %s\n' "$_TODOCLI_INVALID_USAGE" "invalid usage"
-printf '  %-2s    %s\n' "$TODOLIB_INVALID_NAME" "invalid name"
+printf '  %-2s    %s\n' "$_TODOCLI_INVALID_NAME" "invalid name"
 printf '  %-2s    %s\n' "$TODOLIB_DOES_NOT_EXIST" "does not exist"
 printf '  %-2s    %s\n' "$TODOLIB_ALREADY_EXISTS" "already exists"
 }
 
 
 _todocli_parse_args() {
+    local invalid_usage=false
+    local flag default_flag=--open
+    local values default_values=($TODOLIB_DEFAULT_TODO)
+
     case $# in
         0)
-            _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-            _TODOCLI_TODOS=($TODOLIB_DEFAULT_TODO)
+            flag=$default_flag
+            values=$default_values
             ;;
 
         1)
@@ -56,19 +56,19 @@ _todocli_parse_args() {
                 -c | --create | \
                 -d | --delete | \
                 -r | --rename )
-                    return $_TODOCLI_INVALID_USAGE
+                    invalid_usage=true
                     ;;
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw | \
                 -o | --open     | \
                 -s | --show     )
-                    _TODOCLI_FLAG=$1
-                    _TODOCLI_TODOS=($TODOLIB_DEFAULT_TODO)
+                    flag=$1
+                    values=$default_values
                     ;;
                 *)
-                    _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-                    _TODOCLI_TODOS=("$@")
+                    flag=$default_flag
+                    values=("$@")
                     ;;
             esac
             ;;
@@ -79,19 +79,19 @@ _todocli_parse_args() {
                 -l | --list     | \
                 -L | --list-raw | \
                 -r | --rename   )
-                    return $_TODOCLI_INVALID_USAGE
+                    invalid_usage=true
                     ;;
                 -c | --create | \
                 -d | --delete | \
                 -o | --open   | \
                 -s | --show   )
-                    _TODOCLI_FLAG=$1
+                    flag=$1
                     shift
-                    _TODOCLI_TODOS=("$@")
+                    values=("$@")
                     ;;
                 *)
-                    _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-                    _TODOCLI_TODOS=("$@")
+                    flag=$default_flag
+                    values=("$@")
                     ;;
             esac
             ;;
@@ -101,20 +101,20 @@ _todocli_parse_args() {
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw )
-                    return $_TODOCLI_INVALID_USAGE
+                    invalid_usage=true
                     ;;
                 -c | --create | \
                 -d | --delete | \
                 -o | --open   | \
                 -r | --rename | \
                 -s | --show   )
-                    _TODOCLI_FLAG=$1
+                    flag=$1
                     shift
-                    _TODOCLI_TODOS=("$@")
+                    values=("$@")
                     ;;
                 *)
-                    _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-                    _TODOCLI_TODOS=("$@")
+                    flag=$default_flag
+                    values=("$@")
                     ;;
             esac
             ;;
@@ -125,36 +125,51 @@ _todocli_parse_args() {
                 -l | --list     | \
                 -L | --list-raw | \
                 -r | --rename   )
-                    return $_TODOCLI_INVALID_USAGE
+                    invalid_usage=true
                     ;;
                 -c | --create | \
                 -d | --delete | \
                 -o | --open   | \
                 -s | --show   )
-                    _TODOCLI_FLAG=$1
+                    flag=$1
                     shift
-                    _TODOCLI_TODOS=("$@")
+                    values=("$@")
                     ;;
                 *)
-                    _TODOCLI_FLAG=$_TODOCLI_DEFAULT_FLAG
-                    _TODOCLI_TODOS=("$@")
+                    flag=$default_flag
+                    values=("$@")
                     ;;
             esac
             ;;
     esac
-}
 
-
-todocli_run() {
-    if ! _todocli_parse_args "$@"; then
+    if $invalid_usage; then
         printf 'ERROR: Invalid usage ...\n' >&2
         return $_TODOCLI_INVALID_USAGE
     fi
 
-    if [[ $_TODOCLI_FLAG == -h || $_TODOCLI_FLAG == --help ]]; then
+    local names name value
+    for value in "${values[@]}"; do
+        name="$(printf -- "$value" | tr '[:space:]' '_')"
+        if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
+            printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
+            return $_TODOCLI_INVALID_NAME
+        else names="$names $name"
+        fi
+    done
+
+    printf '%s ' "$flag ${names[@]}"
+}
+
+
+todocli_run_cli() {
+    args=( $(_todocli_parse_args "$@") )
+    exit_code=$?; [[ $exit_code -gt 0 ]] && return $exit_code
+
+    if [[ ${args[0]} == -h || ${args[0]} == --help ]]; then
         _todocli_usage
     else
-        todolib_manage "$_TODOCLI_FLAG" "${_TODOCLI_TODOS[@]}"
+        todolib_manage_todos ${args[@]}
     fi
 }
 

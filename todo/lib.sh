@@ -1,6 +1,5 @@
 if ! [[ -v _TODOLIB_SOURCED ]]; then
     _TODOLIB_SOURCED=true
-    readonly TODOLIB_INVALID_NAME=65
     readonly TODOLIB_DOES_NOT_EXIST=66
     readonly TODOLIB_ALREADY_EXISTS=73
     readonly TODOLIB_DEFAULT_TODO=todo
@@ -8,18 +7,13 @@ if ! [[ -v _TODOLIB_SOURCED ]]; then
 fi
 
 
-_todolib_arg_to_name() { printf -- "$1" | tr '_' ' ' ; }
-_todolib_arg_to_filename() { printf '%s.md' "$1" | tr '[:space:]' '_' ; }
+_todolib_name_to_name_with_spaces() { printf -- "$1" | tr '_' ' ' ; }
 
 
 _todolib_create() {
     while [[ $# -gt 0 ]]; do
-        local name="$(_todolib_arg_to_name "$1")"
-        if [[ ! $name =~ ^[-\ [:alnum:]]+$ ]]; then
-            printf 'ERROR: *%s* contains invalid characters ...\n' "$name" >&2
-            return $TODOLIB_INVALID_NAME
-        fi
-        local file=$(_todolib_arg_to_filename "$1")
+        local file="$1.md"
+        local name="$(_todolib_name_to_name_with_spaces "$1")"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
             return $TODOLIB_ALREADY_EXISTS
@@ -36,8 +30,8 @@ _todolib_create() {
 
 _todolib_delete() {
     while [[ $# -gt 0 ]]; do
-        local name="$(_todolib_arg_to_name "$1")"
-        local file=$(_todolib_arg_to_filename "$1")
+        local file="$1.md"
+        local name="$(_todolib_name_to_name_with_spaces "$1")"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOLIB_DOES_NOT_EXIST
@@ -61,35 +55,31 @@ _todolib_list_raw() {
 
 
 _todolib_open() {
-    local todos=""
+    local files
     while [[ $# -gt 0 ]]; do
-        local file=$(_todolib_arg_to_filename "$1")
+        local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_arg_to_name "$1")"
+            local name="$(_todolib_name_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOLIB_DOES_NOT_EXIST
         fi
-        todos="$todos $file"
+        files="$files $file"
         shift
     done
 
-    nvim -O -- $todos
+    nvim -O -- $files
 }
 
 
 _todolib_rename() {
-    local old_name="$(_todolib_arg_to_name "$1")"
-    local old_file=$(_todolib_arg_to_filename "$1")
+    local old_file="$1.md"
+    local old_name="$(_todolib_name_to_name_with_spaces "$1")"
     if [[ ! -f $old_file ]]; then
         printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
         return $TODOLIB_DOES_NOT_EXIST
     fi
-    local new_name="$(_todolib_arg_to_name "$2")"
-    if [[ ! $new_name =~ ^[-\ [:alnum:]]+$ ]]; then
-        printf 'ERROR: *%s* contains invalid characters ...\n' "$new_name" >&2
-        return $TODOLIB_INVALID_NAME
-    fi
-    local new_file=$(_todolib_arg_to_filename "$2")
+    local new_file="$2.md"
+    local new_name="$(_todolib_name_to_name_with_spaces "$2")"
     if [[ -f $new_file ]]; then
         printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
         return $TODOLIB_ALREADY_EXISTS
@@ -112,23 +102,23 @@ _todolib_rename() {
 
 
 _todolib_show() {
-    local todos=""
+    local files
     while [[ $# -gt 0 ]]; do
-        local file=$(_todolib_arg_to_filename "$1")
+        local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_arg_to_name "$1")"
+            local name="$(_todolib_name_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOLIB_DOES_NOT_EXIST
         fi
-        todos="$todos $file"
+        files="$files $file"
         shift
     done
 
-    cat -- $todos | less -F
+    cat -- $files | less -F
 }
 
 
-todolib_manage() {
+todolib_manage_todos() {
     local todos_dir=~/dotfiles/todo/.todos/
     mkdir --parents $todos_dir
     cd $todos_dir
@@ -144,8 +134,8 @@ todolib_manage() {
         [-r]=_todolib_rename   [--rename]=_todolib_rename
         [-s]=_todolib_show     [--show]=_todolib_show
     )
-    local manage="${flags_to_commands[$1]}"
+    local manage_todos="${flags_to_commands[$1]}"
     shift
-    $manage "$@"
+    $manage_todos "$@"
 }
 

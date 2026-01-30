@@ -1,3 +1,3 @@
 #!/bin/bash
 . ~/dotfiles/todo/cli.sh
-todocli_run "$@"
+todocli_run_cli "$@"
