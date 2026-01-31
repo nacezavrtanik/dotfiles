@@ -1,5 +1,6 @@
-. ~/dotfiles/todo/exitcodes.sh
 . ~/dotfiles/todo/lib.sh
+. ~/dotfiles/todo/utils.sh
+. ~/dotfiles/todo/exitcodes.sh
 
 
 _todocli_usage() {
@@ -144,7 +145,7 @@ _todocli_parse_args() {
 
     local names name value
     for value in "${values[@]}"; do
-        name="$(printf -- "$value" | tr '[:space:]' '_')"
+        name="$(todoutils_to_name_with_underscores "$value")"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
             return $TODOEXITCODES_INVALID_NAME
@@ -153,6 +154,47 @@ _todocli_parse_args() {
     done
 
     printf '%s ' "$flag ${names[@]}"
+}
+
+
+_todocli_completion() {
+    local longopts names current
+    longopts='--create --delete --help --list --list-raw --open --rename --show'
+    names="$(todolib_manage_todos -L)"
+    current="$(todoutils_to_name_with_underscores "${COMP_WORDS[COMP_CWORD]}")"
+
+    case $COMP_CWORD in
+        1)
+            COMPREPLY=(
+                $(compgen -W "$longopts" -- "$current")
+                $(compgen -W "$names" -- "$current")
+            )
+            ;;
+        *)
+            case ${COMP_WORDS[1]} in
+                -h | --help     | \
+                -l | --list     | \
+                -L | --list-raw )
+                    COMPREPLY=()
+                    ;;
+                -r | --rename )
+                    if [[ $COMP_CWORD == 2 ]]; then
+                        COMPREPLY=( $(compgen -W "$names" -- "$current") )
+                    else
+                        COMPREPLY=()
+                    fi
+                    ;;
+                *)
+                    COMPREPLY=( $(compgen -W "$names" -- "$current") )
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+
+todocli_register_completion() {
+    complete -o nosort -F _todocli_completion todo
 }
 
 

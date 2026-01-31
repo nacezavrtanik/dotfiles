@@ -1,3 +1,4 @@
+. ~/dotfiles/todo/utils.sh
 . ~/dotfiles/todo/exitcodes.sh
 
 
@@ -8,13 +9,10 @@ if ! [[ -v _TODOLIB_SOURCED ]]; then
 fi
 
 
-_todolib_name_to_name_with_spaces() { printf -- "$1" | tr '_' ' ' ; }
-
-
 _todolib_create() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(_todolib_name_to_name_with_spaces "$1")"
+        local name="$(todoutils_to_name_with_spaces "$1")"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
             return $TODOEXITCODES_ALREADY_EXISTS
@@ -32,7 +30,7 @@ _todolib_create() {
 _todolib_delete() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(_todolib_name_to_name_with_spaces "$1")"
+        local name="$(todoutils_to_name_with_spaces "$1")"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOEXITCODES_DOES_NOT_EXIST
@@ -60,7 +58,7 @@ _todolib_open() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_name_to_name_with_spaces "$1")"
+            local name="$(todoutils_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOEXITCODES_DOES_NOT_EXIST
         fi
@@ -74,13 +72,13 @@ _todolib_open() {
 
 _todolib_rename() {
     local old_file="$1.md"
-    local old_name="$(_todolib_name_to_name_with_spaces "$1")"
+    local old_name="$(todoutils_to_name_with_spaces "$1")"
     if [[ ! -f $old_file ]]; then
         printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
         return $TODOEXITCODES_DOES_NOT_EXIST
     fi
     local new_file="$2.md"
-    local new_name="$(_todolib_name_to_name_with_spaces "$2")"
+    local new_name="$(todoutils_to_name_with_spaces "$2")"
     if [[ -f $new_file ]]; then
         printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
         return $TODOEXITCODES_ALREADY_EXISTS
@@ -107,7 +105,7 @@ _todolib_show() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_name_to_name_with_spaces "$1")"
+            local name="$(todoutils_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $TODOEXITCODES_DOES_NOT_EXIST
         fi
