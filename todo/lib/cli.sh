@@ -1,14 +1,17 @@
-. ~/dotfiles/todo/lib.sh
-. ~/dotfiles/todo/utils.sh
-. ~/dotfiles/todo/exitcodes.sh
+[[ -v _TODOLIB_CLI__SOURCED ]] && return
+readonly _TODOLIB_CLI__SOURCED=true
+
+. ~/dotfiles/todo/lib/core.sh
+. ~/dotfiles/todo/lib/utils.sh
+. ~/dotfiles/todo/lib/exits.sh
 
 
-_todocli_usage() {
+_todolib_cli__usage() {
     cat << EOF
 Usage: todo [OPTION]
 Manage TODOs stored as Markdown files.
 
-The TODOs \`$TODOLIB_DEFAULT_TODO\` (default) and \`$TODOLIB_WORKSPACE_TODO\` are created automatically.
+The TODOs \`$_TODOLIB_CORE_DEFAULT_TODO\` (default) and \`$_TODOLIB_CORE_WORKSPACE_TODO\` are created automatically.
 
 TODO names may contain alphanumeric characters, dashes (-), underscores (_), and
 spaces ( ). Underscores and spaces are interchangeable.
@@ -27,18 +30,18 @@ Options:
 
 Exit status:
 EOF
-printf '  %-2s    %s\n' "$TODOEXITCODES_SUCCESS"        "success"
-printf '  %-2s    %s\n' "$TODOEXITCODES_INVALID_USAGE"  "invalid usage"
-printf '  %-2s    %s\n' "$TODOEXITCODES_INVALID_NAME"   "invalid name"
-printf '  %-2s    %s\n' "$TODOEXITCODES_DOES_NOT_EXIST" "does not exist"
-printf '  %-2s    %s\n' "$TODOEXITCODES_ALREADY_EXISTS" "already exists"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_SUCCESS"        "success"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_USAGE"  "invalid usage"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_NAME"   "invalid name"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_DOES_NOT_EXIST" "does not exist"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_ALREADY_EXISTS" "already exists"
 }
 
 
-_todocli_parse_args() {
+_todolib_cli__parse_args() {
     local invalid_usage=false
     local flag default_flag=--open
-    local values default_values=($TODOLIB_DEFAULT_TODO)
+    local values default_values=($_TODOLIB_CORE_DEFAULT_TODO)
 
     case $# in
         0)
@@ -140,15 +143,15 @@ _todocli_parse_args() {
 
     if $invalid_usage; then
         printf 'ERROR: Invalid usage ...\n' >&2
-        return $TODOEXITCODES_INVALID_USAGE
+        return $_TODOLIB_EXITS_INVALID_USAGE
     fi
 
     local names name value
     for value in "${values[@]}"; do
-        name="$(todoutils_to_name_with_underscores "$value")"
+        name="$(_todolib_utils_to_name_with_underscores "$value")"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
-            return $TODOEXITCODES_INVALID_NAME
+            return $_TODOLIB_EXITS_INVALID_NAME
         else names="$names $name"
         fi
     done
@@ -157,11 +160,11 @@ _todocli_parse_args() {
 }
 
 
-_todocli_completion() {
+_todolib_cli__completion() {
     local longopts names current
     longopts='--create --delete --help --list --list-raw --open --rename --show'
-    names="$(todolib_manage_todos -L)"
-    current="$(todoutils_to_name_with_underscores "${COMP_WORDS[COMP_CWORD]}")"
+    names="$(_todolib_core_manage_todos -L)"
+    current="$(_todolib_utils_to_name_with_underscores "${COMP_WORDS[COMP_CWORD]}")"
 
     case $COMP_CWORD in
         1)
@@ -193,19 +196,19 @@ _todocli_completion() {
 }
 
 
-todocli_register_completion() {
-    complete -o nosort -F _todocli_completion todo
+_todolib_cli_register_completion() {
+    complete -o nosort -F _todolib_cli__completion todo
 }
 
 
-todocli_run_cli() {
+_todolib_cli_run_cli() {
     local args
-    args=( $(_todocli_parse_args "$@") ) || return $?
+    args=( $(_todolib_cli__parse_args "$@") ) || return $?
 
     if [[ ${args[0]} == -h || ${args[0]} == --help ]]; then
-        _todocli_usage
+        _todolib_cli__usage
     else
-        todolib_manage_todos ${args[@]}
+        _todolib_core_manage_todos ${args[@]}
     fi
 }
 

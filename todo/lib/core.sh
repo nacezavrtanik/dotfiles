@@ -1,21 +1,20 @@
-. ~/dotfiles/todo/utils.sh
-. ~/dotfiles/todo/exitcodes.sh
+[[ -v _TODOLIB_CORE__SOURCED ]] && return
+readonly _TODOLIB_CORE__SOURCED=true
+
+. ~/dotfiles/todo/lib/utils.sh
+. ~/dotfiles/todo/lib/exits.sh
+
+readonly _TODOLIB_CORE_DEFAULT_TODO=todo
+readonly _TODOLIB_CORE_WORKSPACE_TODO=workspace
 
 
-if ! [[ -v _TODOLIB_SOURCED ]]; then
-    _TODOLIB_SOURCED=true
-    readonly TODOLIB_DEFAULT_TODO=todo
-    readonly TODOLIB_WORKSPACE_TODO=workspace
-fi
-
-
-_todolib_create() {
+_todolib_core__create() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(todoutils_to_name_with_spaces "$1")"
+        local name="$(_todolib_utils_to_name_with_spaces "$1")"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
-            return $TODOEXITCODES_ALREADY_EXISTS
+            return $_TODOLIB_EXITS_ALREADY_EXISTS
         fi
 
         local title="$(printf -- "$name" | tr [:lower:] [:upper:])"
@@ -27,13 +26,13 @@ _todolib_create() {
 }
 
 
-_todolib_delete() {
+_todolib_core__delete() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(todoutils_to_name_with_spaces "$1")"
+        local name="$(_todolib_utils_to_name_with_spaces "$1")"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOEXITCODES_DOES_NOT_EXIST
+            return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
 
         rm -- $file
@@ -43,24 +42,24 @@ _todolib_delete() {
 }
 
 
-_todolib_list() {
+_todolib_core__list() {
     ls -1 -- *.md | sed -e 's/^/* /' -e 's/_/ /g' -e 's/.md$//' | less -F
 }
 
 
-_todolib_list_raw() {
+_todolib_core__list_raw() {
     ls -1 -- *.md | sed -e 's/.md$//' | less -F
 }
 
 
-_todolib_open() {
+_todolib_core__open() {
     local files
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(todoutils_to_name_with_spaces "$1")"
+            local name="$(_todolib_utils_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOEXITCODES_DOES_NOT_EXIST
+            return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"
         shift
@@ -70,18 +69,18 @@ _todolib_open() {
 }
 
 
-_todolib_rename() {
+_todolib_core__rename() {
     local old_file="$1.md"
-    local old_name="$(todoutils_to_name_with_spaces "$1")"
+    local old_name="$(_todolib_utils_to_name_with_spaces "$1")"
     if [[ ! -f $old_file ]]; then
         printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
-        return $TODOEXITCODES_DOES_NOT_EXIST
+        return $_TODOLIB_EXITS_DOES_NOT_EXIST
     fi
     local new_file="$2.md"
-    local new_name="$(todoutils_to_name_with_spaces "$2")"
+    local new_name="$(_todolib_utils_to_name_with_spaces "$2")"
     if [[ -f $new_file ]]; then
         printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
-        return $TODOEXITCODES_ALREADY_EXISTS
+        return $_TODOLIB_EXITS_ALREADY_EXISTS
     fi
 
     mv -- $old_file $new_file
@@ -100,14 +99,14 @@ _todolib_rename() {
 }
 
 
-_todolib_show() {
+_todolib_core__show() {
     local files
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(todoutils_to_name_with_spaces "$1")"
+            local name="$(_todolib_utils_to_name_with_spaces "$1")"
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
-            return $TODOEXITCODES_DOES_NOT_EXIST
+            return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"
         shift
@@ -117,21 +116,21 @@ _todolib_show() {
 }
 
 
-todolib_manage_todos() {
+_todolib_core_manage_todos() {
     local todos_dir=~/dotfiles/todo/.todos/
     mkdir --parents $todos_dir
     cd $todos_dir
-    _todolib_create $TODOLIB_DEFAULT_TODO > /dev/null 2>&1
-    _todolib_create $TODOLIB_WORKSPACE_TODO > /dev/null 2>&1
+    _todolib_core__create $_TODOLIB_CORE_DEFAULT_TODO > /dev/null 2>&1
+    _todolib_core__create $_TODOLIB_CORE_WORKSPACE_TODO > /dev/null 2>&1
 
     local -A flags_to_commands=(
-        [-c]=_todolib_create   [--create]=_todolib_create
-        [-d]=_todolib_delete   [--delete]=_todolib_delete
-        [-l]=_todolib_list     [--list]=_todolib_list
-        [-L]=_todolib_list_raw [--list-raw]=_todolib_list_raw
-        [-o]=_todolib_open     [--open]=_todolib_open
-        [-r]=_todolib_rename   [--rename]=_todolib_rename
-        [-s]=_todolib_show     [--show]=_todolib_show
+        [-c]=_todolib_core__create   [--create]=_todolib_core__create
+        [-d]=_todolib_core__delete   [--delete]=_todolib_core__delete
+        [-l]=_todolib_core__list     [--list]=_todolib_core__list
+        [-L]=_todolib_core__list_raw [--list-raw]=_todolib_core__list_raw
+        [-o]=_todolib_core__open     [--open]=_todolib_core__open
+        [-r]=_todolib_core__rename   [--rename]=_todolib_core__rename
+        [-s]=_todolib_core__show     [--show]=_todolib_core__show
     )
     local manage_todos="${flags_to_commands[$1]}"
     shift

@@ -7,5 +7,5 @@ export PATH=~/dotfiles/bin:$PATH
 alias tree='tree --gitfile ~/dotfiles/.gitignore_global'
 alias ncdu='ncdu --color dark'
 
-. ~/dotfiles/todo/cli.sh
-todocli_register_completion
+. ~/dotfiles/todo/lib/todolib.sh
+todolib_register_completion
