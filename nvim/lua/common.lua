@@ -43,6 +43,7 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = -1
 vim.o.expandtab = true
+vim.cmd("filetype indent off")
 
 vim.opt.diffopt = { "vertical", "closeoff", "hiddenoff", "filler" }
 
