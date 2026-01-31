@@ -117,6 +117,7 @@ _todolib_core__show() {
 
 
 _todolib_core_manage_todos() {
+    local initial_dir="$(pwd)"
     local todos_dir=~/dotfiles/todo/.todos/
     mkdir --parents $todos_dir
     cd $todos_dir
@@ -135,5 +136,9 @@ _todolib_core_manage_todos() {
     local manage_todos="${flags_to_commands[$1]}"
     shift
     $manage_todos "$@"
+    local exit_code=$?
+
+    cd "$initial_dir"
+    return $exit_code
 }
 
