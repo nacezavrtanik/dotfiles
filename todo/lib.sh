@@ -4,7 +4,7 @@
 if ! [[ -v _TODOLIB_SOURCED ]]; then
     _TODOLIB_SOURCED=true
     readonly TODOLIB_DEFAULT_TODO=todo
-    readonly _TODOLIB_WORKSPACE_TODO=workspace
+    readonly TODOLIB_WORKSPACE_TODO=workspace
 fi
 
 
@@ -124,7 +124,7 @@ todolib_manage_todos() {
     mkdir --parents $todos_dir
     cd $todos_dir
     _todolib_create $TODOLIB_DEFAULT_TODO > /dev/null 2>&1
-    _todolib_create $_TODOLIB_WORKSPACE_TODO > /dev/null 2>&1
+    _todolib_create $TODOLIB_WORKSPACE_TODO > /dev/null 2>&1
 
     local -A flags_to_commands=(
         [-c]=_todolib_create   [--create]=_todolib_create

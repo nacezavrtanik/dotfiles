@@ -7,7 +7,7 @@ _todocli_usage() {
 Usage: todo [OPTION]
 Manage TODOs stored as Markdown files.
 
-The TODOs \`todo\` (default) and \`workspace\` are created automatically.
+The TODOs \`$TODOLIB_DEFAULT_TODO\` (default) and \`$TODOLIB_WORKSPACE_TODO\` are created automatically.
 
 TODO names may contain alphanumeric characters, dashes (-), underscores (_), and
 spaces ( ). Underscores and spaces are interchangeable.
@@ -157,8 +157,8 @@ _todocli_parse_args() {
 
 
 todocli_run_cli() {
-    args=( $(_todocli_parse_args "$@") )
-    exit_code=$?; [[ $exit_code -gt 0 ]] && return $exit_code
+    local args=( $(_todocli_parse_args "$@") )
+    local exit_code=$?; [[ $exit_code -gt 0 ]] && return $exit_code
 
     if [[ ${args[0]} == -h || ${args[0]} == --help ]]; then
         _todocli_usage
