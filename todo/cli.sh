@@ -199,8 +199,8 @@ todocli_register_completion() {
 
 
 todocli_run_cli() {
-    local args=( $(_todocli_parse_args "$@") )
-    local exit_code=$?; [[ $exit_code -gt 0 ]] && return $exit_code
+    local args
+    args=( $(_todocli_parse_args "$@") ) || return $?
 
     if [[ ${args[0]} == -h || ${args[0]} == --help ]]; then
         _todocli_usage
