@@ -8,6 +8,14 @@ readonly _TODOLIB_CORE_DEFAULT_TODO=todo
 readonly _TODOLIB_CORE_WORKSPACE_TODO=workspace
 
 
+_todolib_core__print_header() {
+    local title underline
+    title="$(printf -- "$1" | tr [:lower:] [:upper:])"
+    underline="$(printf -- "$title" | tr [:print:] '=')"
+    printf '\n%s\n%s\n\n' "$title" "$underline"
+}
+
+
 _todolib_core__create() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
@@ -17,9 +25,7 @@ _todolib_core__create() {
             return $_TODOLIB_EXITS_ALREADY_EXISTS
         fi
 
-        local title="$(printf -- "$name" | tr [:lower:] [:upper:])"
-        local underline=$(printf -- "$title" | tr [:print:] '=')
-        printf '\n%s\n%s\n\n' "$title" "$underline" > $file
+        _todolib_core__print_header "$name" > $file
         printf 'Created *%s*!\n' "$name"
         shift
     done
@@ -83,16 +89,14 @@ _todolib_core__rename() {
         return $_TODOLIB_EXITS_ALREADY_EXISTS
     fi
 
-    mv -- $old_file $new_file
-    local old_title="$(printf -- "$old_name" | tr [:lower:] [:upper:])"
-    local old_underline=$(printf -- "$old_title" | tr [:print:] '=')
     if cmp --quiet -- \
-        <(head -n 3 -- $new_file) \
-        <(printf '\n%s\n%s\n' "$old_title" "$old_underline")
+        <(head -n 4 -- $old_file) \
+        <(_todolib_core__print_header "$old_name")
     then
-        local new_title="$(printf -- "$new_name" | tr [:lower:] [:upper:])"
-        local new_underline=$(printf -- "$new_title" | tr [:print:] '=')
-        sed -i "2,3c $new_title\n$new_underline" $new_file
+        _todolib_core__print_header "$new_name" >> $new_file
+        tail -n +5 -- $old_file >> $new_file && rm -- $old_file
+    else
+        mv -- $old_file $new_file && touch -- $new_file
     fi
 
     printf '*%s* renamed to *%s*!\n' "$old_name" "$new_name"
