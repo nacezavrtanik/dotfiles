@@ -15,9 +15,10 @@ _todolib_core__print_header() {
 
 
 _todolib_core__create() {
-    while [[ $# -gt 0 ]]; do
-        local file="$1.md"
-        local name="${1//_/ }"
+    local name file
+    for name in "$@"; do
+        file="$name.md"
+        name="${name//_/ }"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
             return $_TODOLIB_EXITS_ALREADY_EXISTS
@@ -25,15 +26,15 @@ _todolib_core__create() {
 
         _todolib_core__print_header "$name" > $file
         printf 'Created *%s*!\n' "$name"
-        shift
     done
 }
 
 
 _todolib_core__delete() {
-    while [[ $# -gt 0 ]]; do
-        local file="$1.md"
-        local name="${1//_/ }"
+    local name file
+    for name in "$@"; do
+        file="$name.md"
+        name="${name//_/ }"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
@@ -41,7 +42,6 @@ _todolib_core__delete() {
 
         rm -- $file
         printf 'Deleted *%s*!\n' "$name"
-        shift
     done
 }
 
@@ -62,15 +62,14 @@ _todolib_core__list_raw() {
 
 
 _todolib_core__open() {
-    local files
-    while [[ $# -gt 0 ]]; do
-        local file="$1.md"
+    local files name file
+    for name in "$@"; do
+        file="$name.md"
         if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "${1//_/ }" >&2
+            printf 'ERROR: *%s* does not exist ...\n' "${name//_/ }" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"
-        shift
     done
 
     nvim -O -- $files
@@ -106,15 +105,14 @@ _todolib_core__rename() {
 
 
 _todolib_core__show() {
-    local files
-    while [[ $# -gt 0 ]]; do
-        local file="$1.md"
+    local files name file
+    for name in "$@"; do
+        file="$name.md"
         if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "${1//_/ }" >&2
+            printf 'ERROR: *%s* does not exist ...\n' "${name//_/ }" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"
-        shift
     done
 
     cat -- $files | less -F
