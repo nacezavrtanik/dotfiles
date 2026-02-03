@@ -10,9 +10,8 @@ readonly _TODOLIB_CORE_WORKSPACE_TODO=workspace
 
 _todolib_core__print_header() {
     local title underline
-    title="$(printf -- "$1" | tr [:lower:] [:upper:])"
-    underline="$(printf -- "$title" | tr [:print:] '=')"
-    printf '\n%s\n%s\n\n' "$title" "$underline"
+    title="${1^^}"; underline=${1//?/=}
+    printf '\n%s\n%s\n\n' "$title" $underline
 }
 
 
