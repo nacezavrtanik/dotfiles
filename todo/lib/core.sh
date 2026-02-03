@@ -49,12 +49,17 @@ _todolib_core__delete() {
 
 
 _todolib_core__list() {
-    ls -1 -- *.md | sed -e 's/^/* /' -e 's/_/ /g' -e 's/.md$//' | less -F
+    local name
+    for name in *.md; do
+        name=${name%.*}; name="${name//_/ }"
+        printf '* %s\n' "$name"
+    done | less -F
 }
 
 
 _todolib_core__list_raw() {
-    ls -1 -- *.md | sed -e 's/.md$//' | less -F
+    local name
+    for name in *.md; do printf '%s\n' ${name%.*}; done | less -F
 }
 
 
