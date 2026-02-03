@@ -1,7 +1,6 @@
 [[ -v _TODOLIB_CORE__SOURCED ]] && return
 readonly _TODOLIB_CORE__SOURCED=true
 
-. ~/dotfiles/todo/lib/utils.sh
 . ~/dotfiles/todo/lib/exits.sh
 
 readonly _TODOLIB_CORE_DEFAULT_TODO=todo
@@ -18,7 +17,7 @@ _todolib_core__print_header() {
 _todolib_core__create() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(_todolib_utils_to_name_with_spaces "$1")"
+        local name="${1//_/ }"
         if [[ -f $file ]]; then
             printf 'ERROR: *%s* already exists ...\n' "$name" >&2
             return $_TODOLIB_EXITS_ALREADY_EXISTS
@@ -34,7 +33,7 @@ _todolib_core__create() {
 _todolib_core__delete() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
-        local name="$(_todolib_utils_to_name_with_spaces "$1")"
+        local name="${1//_/ }"
         if [[ ! -f $file ]]; then
             printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
@@ -67,8 +66,7 @@ _todolib_core__open() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_utils_to_name_with_spaces "$1")"
-            printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
+            printf 'ERROR: *%s* does not exist ...\n' "${1//_/ }" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"
@@ -81,13 +79,13 @@ _todolib_core__open() {
 
 _todolib_core__rename() {
     local old_file="$1.md"
-    local old_name="$(_todolib_utils_to_name_with_spaces "$1")"
+    local old_name="${1//_/ }"
     if [[ ! -f $old_file ]]; then
         printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
         return $_TODOLIB_EXITS_DOES_NOT_EXIST
     fi
     local new_file="$2.md"
-    local new_name="$(_todolib_utils_to_name_with_spaces "$2")"
+    local new_name="${2//_/ }"
     if [[ -f $new_file ]]; then
         printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
         return $_TODOLIB_EXITS_ALREADY_EXISTS
@@ -112,8 +110,7 @@ _todolib_core__show() {
     while [[ $# -gt 0 ]]; do
         local file="$1.md"
         if [[ ! -f $file ]]; then
-            local name="$(_todolib_utils_to_name_with_spaces "$1")"
-            printf 'ERROR: *%s* does not exist ...\n' "$name" >&2
+            printf 'ERROR: *%s* does not exist ...\n' "${1//_/ }" >&2
             return $_TODOLIB_EXITS_DOES_NOT_EXIST
         fi
         files="$files $file"

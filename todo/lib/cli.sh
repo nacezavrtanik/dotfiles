@@ -2,7 +2,6 @@
 readonly _TODOLIB_CLI__SOURCED=true
 
 . ~/dotfiles/todo/lib/core.sh
-. ~/dotfiles/todo/lib/utils.sh
 . ~/dotfiles/todo/lib/exits.sh
 
 
@@ -148,7 +147,7 @@ _todolib_cli__parse_args() {
 
     local names name value
     for value in "${values[@]}"; do
-        name="$(_todolib_utils_to_name_with_underscores "$value")"
+        name="${value// /_}"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
             return $_TODOLIB_EXITS_INVALID_NAME
@@ -164,7 +163,7 @@ _todolib_cli__completion() {
     local longopts names current
     longopts='--create --delete --help --list --list-raw --open --rename --show'
     names="$(_todolib_core_manage_todos -L)"
-    current="$(_todolib_utils_to_name_with_underscores "${COMP_WORDS[COMP_CWORD]}")"
+    current="${COMP_WORDS[COMP_CWORD]// /_}"
 
     case $COMP_CWORD in
         1)
