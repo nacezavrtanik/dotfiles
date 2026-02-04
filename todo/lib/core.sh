@@ -4,7 +4,6 @@ readonly _TODOLIB_CORE__SOURCED=true
 . ~/dotfiles/todo/lib/exits.sh
 
 readonly _TODOLIB_CORE_DEFAULT_TODO=todo
-readonly _TODOLIB_CORE_WORKSPACE_TODO=workspace
 
 
 _todolib_core__print_header() {
@@ -125,7 +124,6 @@ _todolib_core_manage_todos() {
     mkdir --parents $todos_dir
     cd $todos_dir
     _todolib_core__create $_TODOLIB_CORE_DEFAULT_TODO > /dev/null 2>&1
-    _todolib_core__create $_TODOLIB_CORE_WORKSPACE_TODO > /dev/null 2>&1
 
     local -A flags_to_commands=(
         [-c]=_todolib_core__create   [--create]=_todolib_core__create

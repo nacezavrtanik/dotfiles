@@ -1,3 +1,4 @@
 #!/bin/bash
 . ~/dotfiles/todo/lib/todolib.sh
+todolib_run_cli --create workspace > /dev/null 2>&1
 todolib_run_cli "$@"

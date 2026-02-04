@@ -10,10 +10,9 @@ _todolib_cli__usage() {
 Usage: todo [OPTION]
 Manage TODOs stored as Markdown files.
 
-The TODOs \`$_TODOLIB_CORE_DEFAULT_TODO\` (default) and \`$_TODOLIB_CORE_WORKSPACE_TODO\` are created automatically.
-
 TODO names may contain alphanumeric characters, dashes (-), underscores (_), and
 spaces ( ). Underscores and spaces are interchangeable.
+The default TODO is named \`$_TODOLIB_CORE_DEFAULT_TODO\` and is created automatically.
 
 Options:
   -c, --create TODO...    create new TODOs
