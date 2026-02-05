@@ -9,3 +9,4 @@ alias ncdu='ncdu --color dark'
 
 . ~/dotfiles/todo/lib/todolib.sh
 todolib_register_completion
+export TODO_EDITOR='nvim -O'

@@ -3,6 +3,8 @@ readonly _TODOLIB_CORE__SOURCED=true
 
 . ~/dotfiles/todo/lib/exits.sh
 
+readonly _TODOLIB_CORE_DEFAULT_EDITOR='vim -O'
+readonly _TODOLIB_CORE_DEFAULT_PAGER='less -F'
 readonly _TODOLIB_CORE_DEFAULT_TODO=todo
 
 
@@ -71,7 +73,7 @@ _todolib_core__open() {
         files="$files $file"
     done
 
-    nvim -O -- $files
+    ${TODO_EDITOR:-$_TODOLIB_CORE_DEFAULT_EDITOR} -- $files
 }
 
 
@@ -114,7 +116,7 @@ _todolib_core__show() {
         files="$files $file"
     done
 
-    cat -- $files | less -F
+    cat -- $files | ${TODO_PAGER:-$_TODOLIB_CORE_DEFAULT_PAGER}
 }
 
 

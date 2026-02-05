@@ -8,7 +8,7 @@ readonly _TODOLIB_CLI__SOURCED=true
 _todolib_cli__usage() {
     cat << EOF
 Usage: todo [OPTION]
-Manage TODOs stored as Markdown files.
+Manage a set of TODOs stored as Markdown files.
 
 TODO names may contain alphanumeric characters, dashes (-), underscores (_), and
 spaces ( ). Underscores and spaces are interchangeable.
@@ -20,19 +20,22 @@ Options:
   -h, --help              show this help message
   -l, --list              list all TODOs (pretty format)
   -L, --list-raw          list all TODOs (pipe-friendly format)
-  -o, --open [TODO]...    open TODOs in Neovim (default action);
-                            if no TODOs are given, the default TODO is opened
-  -r, --rename OLD NEW    rename OLD to NEW
+  -o, --open [TODO]...    open TODOs in the editor (default action);
+                            opens default TODO if none given
+  -r, --rename OLD NEW    rename a TODO
   -s, --show [TODO]...    show TODOs in the terminal;
-                            if no TODOs are given, the default TODO is shown
+                            shows default TODO if none given
+
+The --open option uses \`$_TODOLIB_CORE_DEFAULT_EDITOR\`, or \$TODO_EDITOR if set.
+The --show option uses \`$_TODOLIB_CORE_DEFAULT_PAGER\`, or \$TODO_PAGER if set.
 
 Exit status:
 EOF
 printf '  %-2s    %s\n' "$_TODOLIB_EXITS_SUCCESS"        "success"
 printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_USAGE"  "invalid usage"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_NAME"   "invalid name"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_DOES_NOT_EXIST" "does not exist"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_ALREADY_EXISTS" "already exists"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_NAME"   "invalid TODO name"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_DOES_NOT_EXIST" "TODO does not exist"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_ALREADY_EXISTS" "TODO already exists"
 }
 
 
