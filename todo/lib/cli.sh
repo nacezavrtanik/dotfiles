@@ -1,8 +1,10 @@
 [[ -v _TODOLIB_CLI__SOURCED ]] && return
 readonly _TODOLIB_CLI__SOURCED=true
 
-. ~/dotfiles/todo/lib/core.sh
-. ~/dotfiles/todo/lib/exits.sh
+_TODOLIB_CLI__ROOT="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+. "$_TODOLIB_CLI__ROOT/core.sh"
+. "$_TODOLIB_CLI__ROOT/exits.sh"
+unset _TODOLIB_CLI__ROOT
 
 
 _todolib_cli__usage() {
@@ -212,4 +214,3 @@ _todolib_cli_run_cli() {
         _todolib_core_manage_todos ${args[@]}
     fi
 }
-

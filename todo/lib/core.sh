@@ -1,7 +1,7 @@
 [[ -v _TODOLIB_CORE__SOURCED ]] && return
 readonly _TODOLIB_CORE__SOURCED=true
 
-. ~/dotfiles/todo/lib/exits.sh
+. "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/exits.sh"
 
 readonly _TODOLIB_CORE_DEFAULT_EDITOR='vim -O'
 readonly _TODOLIB_CORE_DEFAULT_PAGER='less -F'
@@ -144,4 +144,3 @@ _todolib_core_manage_todos() {
     cd "$initial_dir"
     return $exit_code
 }
-
