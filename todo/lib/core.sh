@@ -3,6 +3,7 @@ readonly _TODOLIB_CORE__SOURCED=true
 
 . "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/exits.sh"
 
+readonly _TODOLIB_CORE__DEFAULT_HOME="$HOME/.local/share/todo/todos/"
 readonly _TODOLIB_CORE_DEFAULT_EDITOR='vim -O'
 readonly _TODOLIB_CORE_DEFAULT_PAGER='less -F'
 readonly _TODOLIB_CORE_DEFAULT_TODO=todo
@@ -122,9 +123,9 @@ _todolib_core__show() {
 
 _todolib_core_manage_todos() {
     local initial_dir="$(pwd)"
-    local todos_dir=~/dotfiles/todo/.todos/
-    mkdir --parents $todos_dir
-    cd $todos_dir
+    local todos_dir="${TODO_HOME:-$_TODOLIB_CORE_DEFAULT_HOME}"
+    mkdir --parents "$todos_dir"
+    cd "$todos_dir"
     _todolib_core__create $_TODOLIB_CORE_DEFAULT_TODO > /dev/null 2>&1
 
     local -A flags_to_commands=(
