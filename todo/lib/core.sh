@@ -53,13 +53,13 @@ _todolib_core__list() {
     for name in *.md; do
         name=${name%.*}; name="${name//_/ }"
         printf '* %s\n' "$name"
-    done | less -F
+    done | ${TODO_PAGER:-$_TODOLIB_CORE_DEFAULT_PAGER}
 }
 
 
 _todolib_core__list_raw() {
     local name
-    for name in *.md; do printf '%s\n' ${name%.*}; done | less -F
+    for name in *.md; do printf '%s\n' ${name%.*}; done
 }
 
 

@@ -29,7 +29,7 @@ Options:
                             shows default TODO if none given
 
 The --open option uses \`$_TODOLIB_CORE_DEFAULT_EDITOR\`, or \$TODO_EDITOR if set.
-The --show option uses \`$_TODOLIB_CORE_DEFAULT_PAGER\`, or \$TODO_PAGER if set.
+The --list and --show options use \`$_TODOLIB_CORE_DEFAULT_PAGER\`, or \$TODO_PAGER if set.
 
 Exit status:
 EOF
