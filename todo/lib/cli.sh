@@ -200,7 +200,10 @@ _todolib_cli__completion() {
 
 
 _todolib_cli_register_completion() {
-    complete -o nosort -F _todolib_cli__completion todo
+    local cmd="${1:-todo}"
+    local completion="_todolib_cli__completion_${cmd//[!a-zA-Z0-9]/_}"
+    eval "$completion() { ${2:+TODO_HOME='$2'} _todolib_cli__completion ; }"
+    complete -o nosort -F $completion "$cmd"
 }
 
 
