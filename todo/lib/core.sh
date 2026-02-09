@@ -124,7 +124,11 @@ _todolib_core__show() {
 _todolib_core_manage_todos() {
     local initial_dir="$(pwd)"
     local todos_dir="${TODO_HOME:-$_TODOLIB_CORE_DEFAULT_HOME}"
-    mkdir --parents "$todos_dir"
+    mkdir --parents "$todos_dir" || return $_TODOLIB_EXITS_FAILURE
+    if ! [[ -r $todos_dir && -w $todos_dir && -x $todos_dir ]]; then
+        printf 'ERROR: Invalid permissions for *%s* ...\n' "$todos_dir"
+        return $_TODOLIB_EXITS_INVALID_PERMISSIONS
+    fi
     cd "$todos_dir"
     _todolib_core__create $_TODOLIB_CORE_DEFAULT_TODO > /dev/null 2>&1
 

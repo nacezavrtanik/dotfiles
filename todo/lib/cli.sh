@@ -33,11 +33,13 @@ The --list and --show options use \`$_TODOLIB_CORE_DEFAULT_PAGER\`, or \$TODO_PA
 
 Exit status:
 EOF
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_SUCCESS"        "success"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_USAGE"  "invalid usage"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_NAME"   "invalid TODO name"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_DOES_NOT_EXIST" "TODO does not exist"
-printf '  %-2s    %s\n' "$_TODOLIB_EXITS_ALREADY_EXISTS" "TODO already exists"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_SUCCESS"             "success"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_FAILURE"             "failure"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_USAGE"       "invalid usage"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_NAME"        "invalid TODO name"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_DOES_NOT_EXIST"      "TODO does not exist"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_ALREADY_EXISTS"      "TODO already exists"
+printf '  %-2s    %s\n' "$_TODOLIB_EXITS_INVALID_PERMISSIONS" "invalid permissions"
 }
 
 
