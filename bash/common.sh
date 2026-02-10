@@ -7,6 +7,8 @@ export PATH=~/dotfiles/bin:$PATH
 alias tree='tree --gitfile ~/dotfiles/.gitignore_global'
 alias ncdu='ncdu --color dark'
 
+export EDITOR=nvim
+
 . ~/dotfiles/todo/lib/todolib.sh
 todolib_register_completion
 export TODO_HOME=~/dotfiles/todo/.todos/
