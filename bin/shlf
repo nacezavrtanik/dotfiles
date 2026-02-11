@@ -1,0 +1,3 @@
+#!/bin/bash
+. ~/dotfiles/shlf/lib/shlflib.sh
+shlflib_run_cli "$@"

@@ -8,6 +8,9 @@ nvim/lua/local.lua
 # todos dir for use with todo command
 .todos/
 
+# notes and todos for use with shlf command
+shlf/.shelf
+
 # theme config file
 .theme
 

@@ -13,3 +13,8 @@ export EDITOR=nvim
 todolib_register_completion
 export TODO_HOME=~/dotfiles/todo/.todos/
 export TODO_EDITOR='nvim -O'
+
+. ~/dotfiles/shlf/lib/shlflib.sh
+shlflib_register_completion
+export SHLF_DIR=~/dotfiles/shlf/.shelf/
+export SHLF_EDITOR='nvim -O'
