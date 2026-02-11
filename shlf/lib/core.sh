@@ -21,8 +21,8 @@ _shlflib_core__create() {
         file="$name.md"
         name="${name//_/ }"
         if [[ -f $file ]]; then
-            printf 'ERROR: *%s* already exists ...\n' "$name" >&2
-            return $_SHLFLIB_EXITS_ALREADY_EXISTS
+            printf 'shlf: cannot create %s: Item already exists\n' "'$name'" >&2
+            return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
         fi
 
         _shlflib_core__print_header "$name" > $file
@@ -35,8 +35,9 @@ _shlflib_core__delete() {
     for name in "$@"; do
         file="$name.md"
         if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "${name//_/ }" >&2
-            return $_SHLFLIB_EXITS_DOES_NOT_EXIST
+            printf 'shlf: cannot delete %s: Item does not exist\n' \
+                "'${name//_/ }'" >&2
+            return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
 
         rm -- $file
@@ -68,8 +69,9 @@ _shlflib_core__open() {
     for name in "$@"; do
         file="$name.md"
         if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "${name//_/ }" >&2
-            return $_SHLFLIB_EXITS_DOES_NOT_EXIST
+            printf 'shlf: cannot open %s: Item does not exist\n' \
+                "'${name//_/ }'" >&2
+            return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
         files="$files $file"
     done
@@ -82,14 +84,15 @@ _shlflib_core__rename() {
     local old_file="$1.md"
     local old_name="${1//_/ }"
     if [[ ! -f $old_file ]]; then
-        printf 'ERROR: *%s* does not exist ...\n' "$old_name" >&2
-        return $_SHLFLIB_EXITS_DOES_NOT_EXIST
+        printf 'shlf: cannot rename %s: Item does not exist\n' "'$old_name'" >&2
+        return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
     fi
     local new_file="$2.md"
     local new_name="${2//_/ }"
     if [[ -f $new_file ]]; then
-        printf 'ERROR: *%s* already exists ...\n' "$new_name" >&2
-        return $_SHLFLIB_EXITS_ALREADY_EXISTS
+        printf 'shlf: cannot rename to %s: Item already exists\n' \
+            "'$new_name'" >&2
+        return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
     fi
 
     if cmp --quiet -- \
@@ -109,8 +112,9 @@ _shlflib_core__show() {
     for name in "$@"; do
         file="$name.md"
         if [[ ! -f $file ]]; then
-            printf 'ERROR: *%s* does not exist ...\n' "${name//_/ }" >&2
-            return $_SHLFLIB_EXITS_DOES_NOT_EXIST
+            printf 'shlf: cannot show %s: Item does not exist\n' \
+                "'${name//_/ }'" >&2
+            return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
         files="$files $file"
     done
@@ -124,7 +128,7 @@ _shlflib_core_manage_shelf() {
     local shelf="${SHLF_DIR:-$_SHLFLIB_CORE_DEFAULT_DIR}"
     mkdir --parents "$shelf" || return $_SHLFLIB_EXITS_FAILURE
     if ! [[ -r $shelf && -w $shelf && -x $shelf ]]; then
-        printf 'ERROR: Insufficient permissions for *%s* ...\n' "$shelf"
+        printf 'shlf: cannot manage %s: Insufficient permissions\n' "'$shelf'"
         return $_SHLFLIB_EXITS_INSUFFICIENT_PERMISSIONS
     fi
     cd "$shelf"

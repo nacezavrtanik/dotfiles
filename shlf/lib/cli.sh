@@ -33,9 +33,9 @@ EOF
 printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_SUCCESS"                  "success"
 printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_FAILURE"                  "failure"
 printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_INVALID_USAGE"            "invalid usage"
-printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_INVALID_NAME"             "invalid item name"
-printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_DOES_NOT_EXIST"           "item does not exist"
-printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_ALREADY_EXISTS"           "item already exists"
+printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_INVALID_ITEM_NAME"        "invalid item name"
+printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST"      "item does not exist"
+printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS"      "item already exists"
 printf '  %-2s    %s\n' "$_SHLFLIB_EXITS_INSUFFICIENT_PERMISSIONS" "insufficient permissions"
 }
 
@@ -140,15 +140,16 @@ _shlflib_cli__parse_args() {
     esac
 
     if $invalid_usage; then
-        printf 'ERROR: Invalid usage ...\n' >&2
+        printf 'shlf: invalid usage\n' >&2
         return $_SHLFLIB_EXITS_INVALID_USAGE
     fi
 
     for value in "${values[@]}"; do
         name="${value// /_}"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
-            printf 'ERROR: *%s* contains invalid characters ...\n' "$value" >&2
-            return $_SHLFLIB_EXITS_INVALID_NAME
+            printf 'shlf: cannot parse %s: Contains invalid characters\n' \
+                "'$value'" >&2
+            return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
         else names="$names $name"
         fi
     done
