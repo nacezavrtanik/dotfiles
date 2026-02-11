@@ -1,4 +1,5 @@
 #!/bin/bash
+set -o errexit -o nounset
 
 setup_sessions() {
     if $(tmux ls > /dev/null 2>&1); then
@@ -14,26 +15,27 @@ setup_sessions() {
     tmux new-session -d -s "$s"
     echo "$((sess_num++)): $s"
 
-    s=todo
+    s=shlf
     initial="$s"
     cd
-    tmux new-session -d -s "$s" -n todo
-    tmux send-keys -t "$s" 'todo --open ' C-m
+    shlf --create todo 2> /dev/null || true
+    tmux new-session -d -s "$s"
+    tmux send-keys -t "$s" 'shlf --open todo' C-m
     echo "$((sess_num++)): $s"
 
     s=dots
     cd ~/dotfiles
-    todo --list | grep -xq '\* dotfiles' || todo --create dotfiles
+    shlf --create dotfiles 2> /dev/null || true
     tmux new-session -d -s "$s"
-    tmux new-window -t "$s":2
-    tmux new-window -t "$s":3 -n todo
-    tmux send-keys -t "$s" 'todo --open dotfiles' C-m
+    tmux new-window -t "$s"
+    tmux new-window -t "$s"
+    tmux send-keys -t "$s" 'shlf --open dotfiles' C-m
     echo "$((sess_num++)): $s"
 
-    if [ -f ~/dotfiles/tmux/sessions.sh ]; then
+    if [[ -f ~/dotfiles/tmux/sessions.sh ]]; then
         . ~/dotfiles/tmux/sessions.sh "$sess_num"
     fi
-    if [ ! -f ~/dotfiles/tmux/tmux.sessions.conf ]; then
+    if [[ ! -f ~/dotfiles/tmux/tmux.sessions.conf ]]; then
         cp ~/dotfiles/tmux/tmux.sessions_template.conf ~/dotfiles/tmux/tmux.sessions.conf
     fi
 
