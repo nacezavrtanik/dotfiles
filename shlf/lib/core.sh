@@ -119,7 +119,7 @@ _shlflib_core__show() {
         files="$files $file"
     done
 
-    cat -- $files | ${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER}
+    ${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER} -- $files
 }
 
 
