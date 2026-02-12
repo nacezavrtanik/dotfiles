@@ -18,6 +18,7 @@ and spaces ( ). Underscores and spaces are interchangeable.
 Options:
   -c, --create ITEM...    create new items
   -d, --delete ITEM...    delete items
+  -g, --grep PATTERN      search for pattern in items
   -h, --help              show this help message
   -l, --list              list all items (pretty format)
   -L, --list-raw          list all items (pipe-friendly format)
@@ -27,6 +28,7 @@ Options:
 
 The --open option uses \`$_SHLFLIB_CORE_DEFAULT_EDITOR\`, or \$SHLF_EDITOR if set.
 The --list and --show options use \`$_SHLFLIB_CORE_DEFAULT_PAGER\`, or \$SHLF_PAGER if set.
+The --grep option uses \`$_SHLFLIB_CORE_DEFAULT_GREP\`, or \$SHLF_GREP if set.
 
 Exit status:
 EOF
@@ -52,6 +54,7 @@ _shlflib_cli__parse_args() {
             case "$1" in
                 -c | --create | \
                 -d | --delete | \
+                -g | --grep   | \
                 -o | --open   | \
                 -r | --rename | \
                 -s | --show   )
@@ -79,6 +82,7 @@ _shlflib_cli__parse_args() {
                     ;;
                 -c | --create | \
                 -d | --delete | \
+                -g | --grep   | \
                 -o | --open   | \
                 -s | --show   )
                     flag=$1
@@ -94,6 +98,7 @@ _shlflib_cli__parse_args() {
 
         3)
             case "$1" in
+                -g | --grep     | \
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw )
@@ -117,6 +122,7 @@ _shlflib_cli__parse_args() {
 
         *)
             case $1 in
+                -g | --grep     | \
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw | \
@@ -160,19 +166,22 @@ _shlflib_cli__parse_args() {
 
 _shlflib_cli__completion() {
     local longopts names current
-    longopts='--create --delete --help --list --list-raw --open --rename --show'
+    longopts=(
+        --create --delete --grep --help --list --list-raw --open --rename --show
+    )
     names="$(_shlflib_core_manage_shelf -L)"
     current="${COMP_WORDS[COMP_CWORD]// /_}"
 
     case $COMP_CWORD in
         1)
             COMPREPLY=(
-                $(compgen -W "$longopts" -- "$current")
+                $(compgen -W "${longopts[*]}" -- "$current")
                 $(compgen -W "$names" -- "$current")
             )
             ;;
         *)
             case ${COMP_WORDS[1]} in
+                -g | --grep     | \
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw )

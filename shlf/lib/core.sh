@@ -6,6 +6,7 @@ readonly _SHLFLIB_CORE__SOURCED=true
 readonly _SHLFLIB_CORE__DEFAULT_DIR="$HOME/.local/share/shlf/shelf/"
 readonly _SHLFLIB_CORE_DEFAULT_EDITOR='vim -O'
 readonly _SHLFLIB_CORE_DEFAULT_PAGER='less -F'
+readonly _SHLFLIB_CORE_DEFAULT_GREP='grep -rn'
 
 
 _shlflib_core__print_header() {
@@ -42,6 +43,26 @@ _shlflib_core__delete() {
 
         rm -- $file
     done
+}
+
+
+_shlflib_core__grep() {
+    local name lineno match
+    while IFS= read; do
+        name="${REPLY%%:*}"
+        name="${name/.\//}"
+        name="${name/.md/}"
+        name="${name//_/ }"
+
+        lineno="${REPLY#*:}"
+        lineno="${lineno%%:*}"
+
+        match="${REPLY#*:}"
+        match="${match#*:}"
+
+        printf '* %s (%s): %s\n' "$name" "$lineno" "$match"
+
+    done < <(${SHLF_GREP:-$_SHLFLIB_CORE_DEFAULT_GREP} "$1" .)
 }
 
 
@@ -136,6 +157,7 @@ _shlflib_core_manage_shelf() {
     local -A flags_to_commands=(
         [-c]=_shlflib_core__create   [--create]=_shlflib_core__create
         [-d]=_shlflib_core__delete   [--delete]=_shlflib_core__delete
+        [-g]=_shlflib_core__grep     [--grep]=_shlflib_core__grep
         [-l]=_shlflib_core__list     [--list]=_shlflib_core__list
         [-L]=_shlflib_core__list_raw [--list-raw]=_shlflib_core__list_raw
         [-o]=_shlflib_core__open     [--open]=_shlflib_core__open

@@ -18,3 +18,4 @@ shlflib_register_completion
 export SHLF_DIR=~/dotfiles/shlf/.shelf/
 export SHLF_EDITOR='nvim -O'
 export SHLF_PAGER='batcat --style plain --color never'
+export SHLF_GREP='rg --line-number --color=always'
