@@ -9,12 +9,12 @@ background = '#061923'
 foreground = '#e5c49e'
 
 [colors.cursor]
-text = '#061822'
+text = '#061923'
 cursor = '#feaf3c'
 
 [colors.selection]
-text = '#ffe9d7'
-background = '#265b75'
+text = '#e5c49e'
+background = '#154057'
 
 [colors.normal]
 black = '#002b42'

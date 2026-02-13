@@ -1,15 +1,22 @@
 " Name:         memories
-" Description:  A dark colorscheme for 4-bit terminals.
+" Description:  A very minimal 4-bit colorscheme.
 " Author:       Nace Zavrtanik <zavrtaniknace@gmail.com>
 " Website:      https://www.github.com/nacezavrtanik/dotfiles
 " License:      MIT
 
+" The 4-bit ANSI colors, as well as the backround color, are inherited from
+" the terminal theme. Note that since `memories` uses black (ANSI 0) as an
+" actual color, this will render certain highlight groups invisible for
+" terminal themes that do not distingish black from the background.
+
 " Loosely based on the `lunaperche` Vim colorscheme.
+
 
 set background=dark
 
 hi clear
 let g:colors_name = 'memories'
+
 
 hi! link helpVim Title
 hi! link helpHeader Title
@@ -90,119 +97,132 @@ hi! link LineNrAbove LineNr
 hi! link LineNrBelow LineNr
 hi! link MessageWindow PMenu
 hi! link PopupNotification Todo
-
-" Unused groups, configure if required.
-hi! link debugPC Normal
-hi! link debugBreakpoint Normal
-hi! link SpellBad Normal
-hi! link SpellCap Normal
-hi! link SpellLocal Normal
-hi! link SpellRare Normal
-hi! link SignColumn Normal
-hi! link diffAdded Normal
-hi! link diffRemoved Normal
-hi! link diffSubname Normal
-hi! link dirType Normal
-hi! link dirPermissionUser Normal
-hi! link dirPermissionGroup Normal
-hi! link dirPermissionOther Normal
-hi! link dirOwner Normal
-hi! link dirGroup Normal
-hi! link dirTime Normal
-hi! link dirSize Normal
-hi! link dirSizeMod Normal
-hi! link FilterMenuDirectorySubtle Normal
-hi! link dirFilterMenuBookmarkPath Normal
-hi! link dirFilterMenuHistoryPath Normal
-hi! link FilterMenuLineNr Normal
-hi! link CocSearch Normal
-hi! link Ignore Normal
-hi! link Conceal Normal
-hi! link Type Normal
-hi! link PreProc Normal
-
-" Custom links and highlight groups.
 hi! link markdownRule markdownListMarker
 hi! link markdownCode String
 hi! link markdownCodeBlock String
-hi! link Special Constant
-hi! link Statusline SelectedItem
-hi! link TabLineSel SelectedItem
-hi! link VertSplit TextlessBorder
-hi! link WinSeparator TextlessBorder
-hi! link TabLineFill TextlessBorder
-hi! link StatuslineNC TextfulBorder
-hi! link Comment GreyedOut
-hi! link NonText GreyedOut
-hi! link FoldColumn GreyedOut
-hi! link SpecialKey GreyedOut
-hi! link EndOfBuffer GreyedOut
-hi! link TabLine TextfulBorder
-hi! link CursorLineNr BoldCursor
-hi! link MatchParen BoldCursor
-hi! link Search NormalCursor
-hi! link CurSearch InverseCursor
-hi! link IncSearch InverseCursor
-hi! link Visual InverseCursor
-hi! link VisualNOS InverseCursor
-hi! link Title BoldBright
-hi! link Identifier BoldBright
-hi! link Function BoldBright
 hi! link PmenuKind PmenuInfo
 hi! link PmenuExtra PmenuInfo
 hi! link PmenuKindSel PmenuInfoSel
 hi! link PmenuExtraSel PmenuInfoSel
+hi! link VisualNOS Visual
+hi! link lCursor Cursor
+hi! link TermCursor Cursor
+hi! link VertSplit WinSeparator
+hi! link Special Constant
 
-hi Normal ctermfg=251 ctermbg=16
 
-hi SelectedItem ctermfg=8 ctermbg=7 cterm=bold
-hi WildMenu ctermfg=8 ctermbg=7 cterm=bold,reverse
-hi QuickFixLine ctermfg=7 ctermbg=234 cterm=NONE
-hi Pmenu ctermfg=240 ctermbg=235 cterm=NONE
-hi PmenuInfo ctermfg=240 ctermbg=235 cterm=italic
-hi PmenuSel ctermfg=7 ctermbg=234 cterm=NONE
-hi PmenuInfoSel ctermfg=7 ctermbg=234 cterm=italic
-hi PmenuSbar ctermfg=234 ctermbg=234 cterm=NONE
-hi PmenuThumb ctermfg=7 ctermbg=7 cterm=NONE
-hi TextlessBorder ctermfg=235 ctermbg=235 cterm=NONE
-hi TextfulBorder ctermfg=240 ctermbg=235 cterm=NONE
-hi GreyedOut ctermfg=239 ctermbg=NONE cterm=italic
-hi Folded ctermfg=239 ctermbg=234 cterm=NONE
-hi ColorColumn ctermfg=NONE ctermbg=234 cterm=NONE
-hi CursorColumn ctermfg=NONE ctermbg=234 cterm=NONE
-hi CursorLine ctermfg=NONE ctermbg=234 cterm=NONE
-hi Underlined ctermfg=NONE ctermbg=NONE cterm=underline
-hi BoldBright ctermfg=254 ctermbg=NONE cterm=bold
+hi! link debugPC                   Normal
+hi! link debugBreakpoint           Normal
+hi! link SpellBad                  Normal
+hi! link SpellCap                  Normal
+hi! link SpellLocal                Normal
+hi! link SpellRare                 Normal
+hi! link SignColumn                Normal
+hi! link diffAdded                 Normal
+hi! link diffRemoved               Normal
+hi! link diffSubname               Normal
+hi! link dirType                   Normal
+hi! link dirPermissionUser         Normal
+hi! link dirPermissionGroup        Normal
+hi! link dirPermissionOther        Normal
+hi! link dirOwner                  Normal
+hi! link dirGroup                  Normal
+hi! link dirTime                   Normal
+hi! link dirSize                   Normal
+hi! link dirSizeMod                Normal
+hi! link FilterMenuDirectorySubtle Normal
+hi! link dirFilterMenuBookmarkPath Normal
+hi! link dirFilterMenuHistoryPath  Normal
+hi! link FilterMenuLineNr          Normal
+hi! link CocSearch                 Normal
+hi! link Ignore                    Normal
+hi! link Conceal                   Normal
+hi! link Type                      Normal
+hi! link PreProc                   Normal
 
-hi BoldCursor ctermfg=3 ctermbg=NONE cterm=bold
-hi NormalCursor ctermfg=3 ctermbg=NONE cterm=NONE
-hi InverseCursor ctermfg=3 ctermbg=16 cterm=reverse
-hi LineNr ctermfg=4 ctermbg=NONE cterm=NONE
-
-hi ModeMsg ctermfg=1 ctermbg=NONE cterm=bold,reverse
-hi ErrorMsg ctermfg=1 ctermbg=NONE cterm=bold
-hi WarningMsg ctermfg=1 ctermbg=NONE cterm=NONE
-hi Error ctermfg=1 ctermbg=NONE cterm=NONE
-hi Todo ctermfg=1 ctermbg=NONE cterm=italic
-
-hi MoreMsg ctermfg=6 ctermbg=NONE cterm=italic
-hi Question ctermfg=6 ctermbg=NONE cterm=italic
-hi Directory ctermfg=6 ctermbg=NONE cterm=bold
-
-hi String ctermfg=7 ctermbg=NONE cterm=NONE
-hi Constant ctermfg=5 ctermbg=NONE cterm=NONE
-hi Statement ctermfg=2 ctermbg=NONE cterm=NONE
-
-hi DiffAdd ctermfg=49 ctermbg=23 cterm=NONE
-hi DiffChange ctermfg=NONE ctermbg=234 cterm=NONE
-hi DiffText ctermfg=51 ctermbg=25 cterm=NONE
-hi DiffDelete ctermfg=16 ctermbg=16 cterm=NONE
 
 " Analogous markdown highlights are linked to these groups.
-hi htmlBold ctermfg=NONE ctermbg=NONE cterm=bold
-hi htmlItalic ctermfg=NONE ctermbg=NONE cterm=italic
-hi htmlUnderline ctermfg=NONE ctermbg=NONE cterm=underline
-hi htmlBoldItalic ctermfg=NONE ctermbg=NONE cterm=bold,italic
-hi htmlBoldUnderline ctermfg=NONE ctermbg=NONE cterm=bold,underline
-hi htmlItalicUnderline ctermfg=NONE ctermbg=NONE cterm=italic,underline
-hi htmlBoldItalicUnderline ctermfg=NONE ctermbg=NONE cterm=bold,italic,underline
+hi htmlBold                ctermfg=none ctermbg=none cterm=bold
+hi htmlItalic              ctermfg=none ctermbg=none cterm=italic
+hi htmlUnderline           ctermfg=none ctermbg=none cterm=underline
+hi htmlBoldItalic          ctermfg=none ctermbg=none cterm=bold,italic
+hi htmlBoldUnderline       ctermfg=none ctermbg=none cterm=bold,underline
+hi htmlItalicUnderline     ctermfg=none ctermbg=none cterm=italic,underline
+hi htmlBoldItalicUnderline ctermfg=none ctermbg=none cterm=bold,italic,underline
+
+
+hi! link Normal            WhiteOnNone
+hi! link StatuslineNC      WhiteOnNone
+hi! link TabLine           WhiteOnNone
+hi! link WildMenu          WhiteOnNoneBold
+hi! link Title             WhiteOnNoneBold
+hi! link Identifier        WhiteOnNoneBold
+hi! link Function          WhiteOnNoneBold
+hi! link QuickFixLine      WhiteOnBlack
+hi! link Pmenu             WhiteOnBlack
+hi! link PmenuInfo         WhiteOnBlackItalic
+hi! link PmenuThumb        WhiteOnWhite
+hi! link TabLineFill       BlackOnNone
+hi! link WinSeparator      BlackOnNone
+hi! link FoldColumn        BlackOnNone
+hi! link NonText           BlackOnNoneItalic
+hi! link SpecialKey        BlackOnNoneItalic
+hi! link EndOfBuffer       BlackOnNoneItalic
+hi! link Comment           BlackBrightOnNoneItalic
+hi! link Folded            BlackBrightOnNoneItalic
+hi! link PmenuSel          BlackOnWhite
+hi! link ComplMatchIns     BlackOnWhite
+hi! link PreInsert         BlackOnWhite
+hi! link Statusline        BlackOnWhiteBold
+hi! link TabLineSel        BlackOnWhiteBold
+hi! link PmenuInfoSel      BlackOnWhiteItalic
+hi! link PmenuSbar         BlackOnBlack
+hi! link ColorColumn       NoneOnBlack
+hi! link CursorColumn      NoneOnBlack
+hi! link CursorLine        NoneOnBlack
+hi WhiteOnNone             ctermfg=7    ctermbg=none cterm=none
+hi WhiteOnNoneBold         ctermfg=7    ctermbg=none cterm=bold
+hi WhiteOnBlack            ctermfg=7    ctermbg=0    cterm=none
+hi WhiteOnBlackItalic      ctermfg=7    ctermbg=0    cterm=italic
+hi WhiteOnWhite            ctermfg=7    ctermbg=7    cterm=none
+hi BlackOnNone             ctermfg=0    ctermbg=none cterm=none
+hi BlackOnNoneItalic       ctermfg=0    ctermbg=none cterm=italic
+hi BlackBrightOnNoneItalic ctermfg=8    ctermbg=none cterm=italic
+hi BlackOnWhite            ctermfg=0    ctermbg=7    cterm=none
+hi BlackOnWhiteBold        ctermfg=0    ctermbg=7    cterm=bold
+hi BlackOnWhiteItalic      ctermfg=0    ctermbg=7    cterm=italic
+hi BlackOnBlack            ctermfg=0    ctermbg=0    cterm=none
+hi NoneOnBlack             ctermfg=none ctermbg=0    cterm=none
+
+hi! link Search       YellowOnNone
+hi! link CursorLineNr YellowOnNoneBold
+hi! link MatchParen   YellowOnNoneBold
+hi! link CurSearch    YellowOnBlueBold
+hi! link LineNr       BlueOnNone
+hi! link IncSearch    BlackOnYellow
+hi! link Cursor       BlackOnYellow
+hi! link Visual       BlackOnYellow
+hi YellowOnNone       ctermfg=3 ctermbg=none cterm=none
+hi YellowOnNoneBold   ctermfg=3 ctermbg=none cterm=bold
+hi YellowOnBlueBold   ctermfg=3 ctermbg=4    cterm=bold
+hi BlueOnNone         ctermfg=4 ctermbg=none cterm=none
+hi BlackOnYellow      ctermfg=0 ctermbg=3    cterm=none
+
+hi ModeMsg    ctermfg=1 ctermbg=none cterm=bold,reverse
+hi ErrorMsg   ctermfg=1 ctermbg=none cterm=bold
+hi WarningMsg ctermfg=1 ctermbg=none cterm=none
+hi Error      ctermfg=1 ctermbg=none cterm=none
+hi Todo       ctermfg=1 ctermbg=none cterm=italic
+hi OkMsg      ctermfg=2 ctermbg=none cterm=none
+hi MoreMsg    ctermfg=4 ctermbg=none cterm=italic
+hi Question   ctermfg=4 ctermbg=none cterm=italic
+hi Directory  ctermfg=4 ctermbg=none cterm=bold
+
+hi Statement  ctermfg=2 ctermbg=none cterm=none
+hi Constant   ctermfg=5 ctermbg=none cterm=none
+hi String     ctermfg=6 ctermbg=none cterm=none
+
+hi DiffAdd    ctermfg=7    ctermbg=10    cterm=none
+hi DiffText   ctermfg=7    ctermbg=12    cterm=none
+hi DiffChange ctermfg=none ctermbg=0    cterm=none
+hi DiffDelete ctermfg=0    ctermbg=none cterm=none
