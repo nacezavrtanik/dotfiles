@@ -13,6 +13,13 @@ vim.o.laststatus = 1
 vim.o.showcmd = false
 vim.o.breakindent = true
 vim.o.showbreak = "~"
+vim.o.fillchars = "vert: ,diff: ,lastline:~,fold:~"
+
+function _G.get_foldtext()
+  local linesnr = vim.v.foldend - vim.v.foldstart + 1
+  return "(" .. linesnr .. ")"
+end
+vim.o.foldtext="v:lua.get_foldtext()"
 
 function _G.get_tabline()
   local tabline = {}
@@ -45,7 +52,15 @@ vim.o.softtabstop = -1
 vim.o.expandtab = true
 vim.cmd("filetype indent off")
 
-vim.opt.diffopt = { "vertical", "closeoff", "hiddenoff", "filler" }
+vim.opt.diffopt = {
+  "vertical",
+  "closeoff",
+  "hiddenoff",
+  "filler",
+  "foldcolumn:0",
+  "algorithm:histogram",
+  "inline:char",
+}
 
 vim.keymap.set({ "n", "v" }, "<Leader>8", function()
   vim.o.colorcolumn = (vim.o.colorcolumn == "") and "80" or ""
