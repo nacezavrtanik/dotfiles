@@ -151,7 +151,7 @@ _shlflib_cli__parse_args() {
     fi
 
     for value in "${values[@]}"; do
-        name="${value// /_}"
+        name="${value// /_}"; name="${name%.md}"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'shlf: cannot parse %s: Contains invalid characters\n' \
                 "'$value'" >&2
