@@ -22,9 +22,9 @@ Options:
   -h, --help              show this help message
   -l, --list              list all items (pretty format)
   -L, --list-raw          list all items (pipe-friendly format)
-  -o, --open ITEM...      open items in the editor (default action)
+  -o, --open [ITEM]...    open items in the editor (default action)
   -r, --rename OLD NEW    rename an item
-  -s, --show ITEM...      show items in the terminal
+  -s, --show [ITEM]...    show items in the terminal
 
 The --open option uses \`$_SHLFLIB_CORE_DEFAULT_EDITOR\`, or \$SHLF_EDITOR if set.
 The --list and --show options use \`$_SHLFLIB_CORE_DEFAULT_PAGER\`, or \$SHLF_PAGER if set.
@@ -48,21 +48,21 @@ _shlflib_cli__parse_args() {
 
     case $# in
         0)
-            invalid_usage=true
+            flag=$default_flag
             ;;
         1)
             case "$1" in
                 -c | --create | \
                 -d | --delete | \
                 -g | --grep   | \
-                -o | --open   | \
-                -r | --rename | \
-                -s | --show   )
+                -r | --rename )
                     invalid_usage=true
                     ;;
                 -h | --help     | \
                 -l | --list     | \
-                -L | --list-raw )
+                -L | --list-raw | \
+                -o | --open     | \
+                -s | --show   )
                     flag=$1
                     ;;
                 *)
