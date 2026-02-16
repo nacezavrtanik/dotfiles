@@ -14,15 +14,19 @@ export BAT_THEME=base16
 export BAT_STYLE=header,grid,numbers
 
 export FZF_DEFAULT_OPTS='
--i --layout=reverse --height=50% --no-info --no-scrollbar --cycle --scroll-off=5
---prompt="?> " --pointer=" >" --border=none --preview-window=border-sharp
+-i --cycle --no-scrollbar --scroll-off=5 --no-info
+--layout=reverse --height=66% --border=sharp
+--preview-window="right,50%,border-sharp,<80(down,66%,border-sharp)" --multi
+--prompt="?> " --pointer=" >" --marker="*"
 --bind=ctrl-d:preview-half-page-down --bind=ctrl-u:preview-half-page-up
---color=16,prompt:4,hl:4,pointer:2,hl+:2,border:2,gutter:-1,bg+:-1,fg+:-1
+--color=16,border:0,preview-border:2,pointer:2,hl+:2,prompt:4,hl:4,marker:5
+--color=gutter:-1,bg+:-1,fg+:-1
 '
 
 . ~/dotfiles/shlf/lib/shlflib.sh
 shlflib_register_completion
 export SHLF_DIR=~/dotfiles/shlf/.shelf/
 export SHLF_EDITOR='nvim -O'
-export SHLF_PAGER='batcat --style plain --color never'
+export SHLF_PAGER='batcat --style=plain --color=always'
 export SHLF_GREP='rg --line-number --color=always'
+export SHLF_PICKER='fzf --preview="shlf --show {}"'
