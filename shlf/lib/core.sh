@@ -16,16 +16,22 @@ _shlflib_core__print_header() {
 }
 
 
-_shlflib_core__prompt_for_input() {
-    local PS3="$1 #) " name
-    select name in $(_shlflib_core__list_raw); do
-        if [[ -n $name ]]; then
-            printf -- "$name"
-            break
-        else
-            printf 'invalid input: %s is not a number\n' "'$REPLY'" >&2
-        fi
-    done
+_shlflib_core__get_args() {
+    local args
+    if [[ -v SHLF_PICKER ]]; then
+        args=$(eval "_shlflib_core__list_raw | $SHLF_PICKER")
+    else
+        local PS3="$1 #) " name
+        select name in $(_shlflib_core__list_raw); do
+            if [[ -n $name ]]; then
+                args="$name"
+                break
+            else
+                printf 'invalid input: %s is not a number\n' "'$REPLY'" >&2
+            fi
+        done
+    fi
+    printf -- "$args"
 }
 
 
@@ -99,8 +105,10 @@ _shlflib_core__list_raw() {
 
 
 _shlflib_core__open() {
+    [[ $# -gt 0 ]] || set -- $(_shlflib_core__get_args open)
+    [[ $# -gt 0 ]] || return
+
     local files name file
-    [[ $# -gt 0 ]] || set -- $(_shlflib_core__prompt_for_input open)
     for name in "$@"; do
         file="$name.md"
         if [[ ! -f $file ]]; then
@@ -111,7 +119,7 @@ _shlflib_core__open() {
         files="$files $file"
     done
 
-    ${SHLF_EDITOR:-$_SHLFLIB_CORE_DEFAULT_EDITOR} -- $files
+    eval "${SHLF_EDITOR:-$_SHLFLIB_CORE_DEFAULT_EDITOR} -- $files"
 }
 
 
@@ -143,8 +151,10 @@ _shlflib_core__rename() {
 
 
 _shlflib_core__show() {
+    [[ $# -gt 0 ]] || set -- $(_shlflib_core__get_args show)
+    [[ $# -gt 0 ]] || return
+
     local files name file
-    [[ $# -gt 0 ]] || set -- $(_shlflib_core__prompt_for_input show)
     for name in "$@"; do
         file="$name.md"
         if [[ ! -f $file ]]; then
@@ -155,7 +165,7 @@ _shlflib_core__show() {
         files="$files $file"
     done
 
-    ${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER} -- $files
+    eval "${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER} -- $files"
 }
 
 
