@@ -1,4 +1,3 @@
-
 vim.g.mapleader = " "
 vim.o.mouse = ""
 
@@ -51,6 +50,15 @@ vim.o.tabstop = 4
 vim.o.softtabstop = -1
 vim.o.expandtab = true
 vim.cmd("filetype indent off")
+vim.api.nvim_create_autocmd(
+  { "FileType" },
+  {
+    pattern = "*",
+    callback = function()
+      vim.opt_local.formatoptions:remove({ "o", "r" })
+    end,
+  }
+)
 
 vim.opt.diffopt = {
   "vertical",
