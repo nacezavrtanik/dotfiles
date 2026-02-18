@@ -97,6 +97,16 @@ vim.api.nvim_create_autocmd(
 )
 
 vim.api.nvim_create_autocmd(
+  { "VimResized" },
+  {
+    pattern = "*",
+    callback = function()
+      vim.cmd("wincmd =")
+    end
+  }
+)
+
+vim.api.nvim_create_autocmd(
   { "BufWritePre" },
   {
     pattern="*",

@@ -10,6 +10,9 @@ setup_sessions() {
     here=$(pwd)
     sess_num=0
 
+    shlf --create todo 2> /dev/null || true
+    shlf --create workspace 2> /dev/null || true
+
     s=null
     cd
     tmux new-session -d -s "$s"
@@ -18,7 +21,6 @@ setup_sessions() {
     s=shlf
     initial="$s"
     cd
-    shlf --create todo 2> /dev/null || true
     tmux new-session -d -s "$s"
     tmux send-keys -t "$s" 'shlf --open todo' C-m
     echo "$((sess_num++)): $s"
@@ -29,7 +31,7 @@ setup_sessions() {
     tmux new-session -d -s "$s"
     tmux new-window -t "$s"
     tmux new-window -t "$s"
-    tmux send-keys -t "$s" 'shlf --open dotfiles' C-m
+    tmux send-keys -t "$s" 'shlf --open workspace dotfiles' C-m
     echo "$((sess_num++)): $s"
 
     if [[ -f ~/dotfiles/tmux/sessions.sh ]]; then
