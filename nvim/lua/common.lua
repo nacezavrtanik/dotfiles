@@ -60,6 +60,9 @@ vim.api.nvim_create_autocmd(
   }
 )
 
+vim.o.pumheight = 15
+vim.opt.wildmode = { "longest:full", "full" }
+
 vim.opt.diffopt = {
   "vertical",
   "closeoff",
