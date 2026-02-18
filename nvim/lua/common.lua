@@ -1,3 +1,7 @@
+local user_augroup = vim.api.nvim_create_augroup(
+  "UserAutocmds", { clear = true }
+)
+
 vim.g.mapleader = " "
 vim.o.mouse = ""
 
@@ -53,6 +57,8 @@ vim.cmd("filetype indent off")
 vim.api.nvim_create_autocmd(
   { "FileType" },
   {
+    desc = "Disable automatic insertion of the comment character",
+    group = user_augroup,
     pattern = "*",
     callback = function()
       vim.opt_local.formatoptions:remove({ "o", "r" })
@@ -92,9 +98,11 @@ vim.keymap.set("n", "<Leader>cl", ":clast<CR>")
 vim.api.nvim_create_autocmd(
   { "QuickFixCmdPost" },
   {
+    desc = "Open QF window after grep if any matches, close otherwise",
+    group = user_augroup,
     pattern = "grep",
     callback = function()
-      vim.cmd("cwindow")
+      vim.cmd.cwindow()
     end,
   }
 )
@@ -102,9 +110,10 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   { "VimResized" },
   {
-    pattern = "*",
+    desc = "Equalize window sizes on terminal resize",
+    group = user_augroup,
     callback = function()
-      vim.cmd("wincmd =")
+      vim.cmd.wincmd("=")
     end
   }
 )
@@ -112,9 +121,13 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   { "BufWritePre" },
   {
+    desc = "Remove trailing spaces on save, and naturally reposition cursor",
+    group = user_augroup,
     pattern="*",
     callback = function()
+      local view = vim.fn.winsaveview()
       vim.cmd([[%s/\s\+$//e]])
+      vim.fn.winrestview(view)
     end,
   }
 )
