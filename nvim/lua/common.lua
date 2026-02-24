@@ -9,6 +9,17 @@ vim.o.termguicolors = false
 vim.cmd.colorscheme("memories")
 vim.o.cursorline = true
 vim.o.cursorlineopt = "number"
+vim.api.nvim_create_autocmd(
+  { "FileType" },
+  {
+    desc = "Enable treesitter highlighting for Markdown",
+    group = user_augroup,
+    pattern = "markdown",
+    callback = function()
+      vim.treesitter.start()
+    end,
+  }
+)
 
 vim.o.rulerformat = "%3(%P%)"
 vim.o.statusline = [[%<%t %m%h%r%=%P]]

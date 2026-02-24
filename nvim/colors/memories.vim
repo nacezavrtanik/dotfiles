@@ -141,6 +141,7 @@ hi! link Type                      Normal
 hi! link PreProc                   Normal
 
 
+" MARKDOWN
 " Analogous markdown highlights are linked to these groups.
 hi htmlBold                ctermfg=none ctermbg=none cterm=bold
 hi htmlItalic              ctermfg=none ctermbg=none cterm=italic
@@ -149,7 +150,30 @@ hi htmlBoldItalic          ctermfg=none ctermbg=none cterm=bold,italic
 hi htmlBoldUnderline       ctermfg=none ctermbg=none cterm=bold,underline
 hi htmlItalicUnderline     ctermfg=none ctermbg=none cterm=italic,underline
 hi htmlBoldItalicUnderline ctermfg=none ctermbg=none cterm=bold,italic,underline
-
+" Treesitter highlights.
+hi! link @markup.heading.1             GreenOnNoneBold
+hi! link @markup.heading.2             GreenOnNoneBold
+hi! link @markup.heading.3             MagentaOnNoneBold
+hi! link @markup.heading.4             MagentaOnNone
+hi! link @markup.heading.5             MagentaOnNone
+hi! link @markup.heading.6             MagentaOnNone
+hi! link @markup.link                  GreenOnNone
+hi! link @markup.link.label            GreenOnNone
+hi! link @markup.link.url              BlackOnNoneItalicUnderline
+hi! link @markup.list                  MagentaOnNone
+hi! link @markup.list.checked          MagentaOnNone
+hi! link @markup.list.unchecked        CyanOnNone
+hi! link @markup.raw                   CyanOnNone
+hi! link @markup.quote                 CyanOnNone
+hi! link @markup.math                  CyanOnNone
+hi! link @label.markdown               BlackOnNone
+hi! link @punctuation.special.markdown BlackOnNone
+hi GreenOnNoneBold                     ctermfg=2 ctermbg=none cterm=bold
+hi GreenOnNone                         ctermfg=2 ctermbg=none cterm=none
+hi MagentaOnNoneBold                   ctermfg=5 ctermbg=none cterm=bold
+hi MagentaOnNone                       ctermfg=5 ctermbg=none cterm=none
+hi CyanOnNone                          ctermfg=6 ctermbg=none cterm=none
+hi BlackOnNoneItalicUnderline          ctermfg=0 ctermbg=none cterm=italic,underline
 
 hi! link Normal            WhiteOnNone
 hi! link StatuslineNC      WhiteOnNone
