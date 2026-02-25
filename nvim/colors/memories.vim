@@ -154,9 +154,9 @@ hi htmlBoldItalicUnderline ctermfg=none ctermbg=none cterm=bold,italic,underline
 hi! link @markup.heading.1             GreenOnNoneBold
 hi! link @markup.heading.2             GreenOnNoneBold
 hi! link @markup.heading.3             MagentaOnNoneBold
-hi! link @markup.heading.4             MagentaOnNone
-hi! link @markup.heading.5             MagentaOnNone
-hi! link @markup.heading.6             MagentaOnNone
+hi! link @markup.heading.4             MagentaOnNoneItalic
+hi! link @markup.heading.5             MagentaOnNoneItalic
+hi! link @markup.heading.6             MagentaOnNoneItalic
 hi! link @markup.link                  GreenOnNone
 hi! link @markup.link.label            GreenOnNone
 hi! link @markup.link.url              BlackOnNoneItalicUnderline
@@ -164,59 +164,40 @@ hi! link @markup.list                  MagentaOnNone
 hi! link @markup.list.checked          MagentaOnNone
 hi! link @markup.list.unchecked        CyanOnNone
 hi! link @markup.raw                   CyanOnNone
-hi! link @markup.quote                 CyanOnNone
+hi! link @markup.quote                 WhiteOnNoneItalic
 hi! link @markup.math                  CyanOnNone
 hi! link @label.markdown               BlackOnNone
 hi! link @punctuation.special.markdown BlackOnNone
-hi GreenOnNoneBold                     ctermfg=2 ctermbg=none cterm=bold
-hi GreenOnNone                         ctermfg=2 ctermbg=none cterm=none
-hi MagentaOnNoneBold                   ctermfg=5 ctermbg=none cterm=bold
-hi MagentaOnNone                       ctermfg=5 ctermbg=none cterm=none
-hi CyanOnNone                          ctermfg=6 ctermbg=none cterm=none
-hi BlackOnNoneItalicUnderline          ctermfg=0 ctermbg=none cterm=italic,underline
 
-hi! link Normal            WhiteOnNone
-hi! link StatuslineNC      WhiteOnNone
-hi! link TabLine           WhiteOnNone
-hi! link WildMenu          WhiteOnNoneBold
-hi! link Title             WhiteOnNoneBold
-hi! link Identifier        WhiteOnNoneBold
-hi! link Function          WhiteOnNoneBold
-hi! link QuickFixLine      WhiteOnBlack
-hi! link Pmenu             WhiteOnBlack
-hi! link PmenuInfo         WhiteOnBlackItalic
-hi! link PmenuThumb        WhiteOnWhite
-hi! link TabLineFill       BlackOnNone
-hi! link WinSeparator      BlackOnNone
-hi! link FoldColumn        BlackOnNone
-hi! link NonText           BlackOnNoneItalic
-hi! link SpecialKey        BlackOnNoneItalic
-hi! link EndOfBuffer       BlackOnNoneItalic
-hi! link Comment           BlackBrightOnNoneItalic
-hi! link Folded            BlackBrightOnNoneItalic
-hi! link PmenuSel          BlackOnWhite
-hi! link ComplMatchIns     BlackOnWhite
-hi! link PreInsert         BlackOnWhite
-hi! link Statusline        BlackOnWhiteBold
-hi! link TabLineSel        BlackOnWhiteBold
-hi! link PmenuInfoSel      BlackOnWhiteItalic
-hi! link PmenuSbar         BlackOnBlack
-hi! link ColorColumn       NoneOnBlack
-hi! link CursorColumn      NoneOnBlack
-hi! link CursorLine        NoneOnBlack
-hi WhiteOnNone             ctermfg=7    ctermbg=none cterm=none
-hi WhiteOnNoneBold         ctermfg=7    ctermbg=none cterm=bold
-hi WhiteOnBlack            ctermfg=7    ctermbg=0    cterm=none
-hi WhiteOnBlackItalic      ctermfg=7    ctermbg=0    cterm=italic
-hi WhiteOnWhite            ctermfg=7    ctermbg=7    cterm=none
-hi BlackOnNone             ctermfg=0    ctermbg=none cterm=none
-hi BlackOnNoneItalic       ctermfg=0    ctermbg=none cterm=italic
-hi BlackBrightOnNoneItalic ctermfg=8    ctermbg=none cterm=italic
-hi BlackOnWhite            ctermfg=0    ctermbg=7    cterm=none
-hi BlackOnWhiteBold        ctermfg=0    ctermbg=7    cterm=bold
-hi BlackOnWhiteItalic      ctermfg=0    ctermbg=7    cterm=italic
-hi BlackOnBlack            ctermfg=0    ctermbg=0    cterm=none
-hi NoneOnBlack             ctermfg=none ctermbg=0    cterm=none
+hi! link Normal        WhiteOnNone
+hi! link StatuslineNC  WhiteOnNone
+hi! link TabLine       WhiteOnNone
+hi! link WildMenu      WhiteOnNoneBold
+hi! link Title         WhiteOnNoneBold
+hi! link Identifier    WhiteOnNoneBold
+hi! link Function      WhiteOnNoneBold
+hi! link QuickFixLine  WhiteOnBlack
+hi! link Pmenu         WhiteOnBlack
+hi! link PmenuInfo     WhiteOnBlackItalic
+hi! link PmenuThumb    WhiteOnWhite
+hi! link TabLineFill   BlackOnNone
+hi! link WinSeparator  BlackOnNone
+hi! link FoldColumn    BlackOnNone
+hi! link NonText       BlackOnNoneItalic
+hi! link SpecialKey    BlackOnNoneItalic
+hi! link EndOfBuffer   BlackOnNoneItalic
+hi! link Comment       BrightBlackOnNoneItalic
+hi! link Folded        BrightBlackOnNoneItalic
+hi! link PmenuSel      BlackOnWhite
+hi! link ComplMatchIns BlackOnWhite
+hi! link PreInsert     BlackOnWhite
+hi! link Statusline    BlackOnWhiteBold
+hi! link TabLineSel    BlackOnWhiteBold
+hi! link PmenuInfoSel  BlackOnWhiteItalic
+hi! link PmenuSbar     BlackOnBlack
+hi! link ColorColumn   NoneOnBlack
+hi! link CursorColumn  NoneOnBlack
+hi! link CursorLine    NoneOnBlack
 
 hi! link Search       YellowOnNone
 hi! link CursorLineNr YellowOnNoneBold
@@ -226,27 +207,57 @@ hi! link LineNr       BlueOnNone
 hi! link IncSearch    BlackOnYellow
 hi! link Cursor       BlackOnYellow
 hi! link Visual       BlackOnYellow
-hi YellowOnNone       ctermfg=3 ctermbg=none cterm=none
-hi YellowOnNoneBold   ctermfg=3 ctermbg=none cterm=bold
-hi YellowOnBlueBold   ctermfg=3 ctermbg=4    cterm=bold
-hi BlueOnNone         ctermfg=4 ctermbg=none cterm=none
-hi BlackOnYellow      ctermfg=0 ctermbg=3    cterm=none
 
-hi ModeMsg    ctermfg=1 ctermbg=none cterm=bold,reverse
-hi ErrorMsg   ctermfg=1 ctermbg=none cterm=bold
-hi WarningMsg ctermfg=1 ctermbg=none cterm=none
-hi Error      ctermfg=1 ctermbg=none cterm=none
-hi Todo       ctermfg=1 ctermbg=none cterm=italic
-hi OkMsg      ctermfg=2 ctermbg=none cterm=none
-hi MoreMsg    ctermfg=4 ctermbg=none cterm=italic
-hi Question   ctermfg=4 ctermbg=none cterm=italic
-hi Directory  ctermfg=4 ctermbg=none cterm=bold
+hi! link ModeMsg    RedOnNoneBoldReverse
+hi! link ErrorMsg   RedOnNoneBold
+hi! link WarningMsg RedOnNone
+hi! link Error      RedOnNone
+hi! link Todo       RedOnNoneItalic
+hi! link OkMsg      GreenOnNone
+hi! link MoreMsg    BlueOnNoneItalic
+hi! link Question   BlueOnNoneItalic
+hi! link Directory  BlueOnNoneBold
 
-hi Statement  ctermfg=2 ctermbg=none cterm=none
-hi Constant   ctermfg=5 ctermbg=none cterm=none
-hi String     ctermfg=6 ctermbg=none cterm=none
+hi! link Statement GreenOnNone
+hi! link Constant  MagentaOnNone
+hi! link String    CyanOnNone
 
-hi DiffAdd    ctermfg=7    ctermbg=10    cterm=none
-hi DiffText   ctermfg=7    ctermbg=12    cterm=none
-hi DiffChange ctermfg=none ctermbg=0    cterm=none
-hi DiffDelete ctermfg=0    ctermbg=none cterm=none
+hi! link DiffAdd    WhiteOnBrightGreen
+hi! link DiffText   WhiteOnBrightBlue
+hi! link DiffChange NoneOnBlack
+hi! link DiffDelete BlackOnNone
+
+hi NoneOnBlack                ctermfg=none ctermbg=0    cterm=none
+hi BlackOnNone                ctermfg=0    ctermbg=none cterm=none
+hi BlackOnNoneItalic          ctermfg=0    ctermbg=none cterm=italic
+hi BlackOnNoneItalicUnderline ctermfg=0    ctermbg=none cterm=italic,underline
+hi BlackOnBlack               ctermfg=0    ctermbg=0    cterm=none
+hi BlackOnYellow              ctermfg=0    ctermbg=3    cterm=none
+hi BlackOnWhite               ctermfg=0    ctermbg=7    cterm=none
+hi BlackOnWhiteBold           ctermfg=0    ctermbg=7    cterm=bold
+hi BlackOnWhiteItalic         ctermfg=0    ctermbg=7    cterm=italic
+hi RedOnNone                  ctermfg=1    ctermbg=none cterm=none
+hi RedOnNoneBold              ctermfg=1    ctermbg=none cterm=bold
+hi RedOnNoneBoldReverse       ctermfg=1    ctermbg=none cterm=bold,reverse
+hi RedOnNoneItalic            ctermfg=1    ctermbg=none cterm=italic
+hi GreenOnNone                ctermfg=2    ctermbg=none cterm=none
+hi GreenOnNoneBold            ctermfg=2    ctermbg=none cterm=bold
+hi YellowOnNone               ctermfg=3    ctermbg=none cterm=none
+hi YellowOnNoneBold           ctermfg=3    ctermbg=none cterm=bold
+hi YellowOnBlueBold           ctermfg=3    ctermbg=4    cterm=bold
+hi BlueOnNone                 ctermfg=4    ctermbg=none cterm=none
+hi BlueOnNoneBold             ctermfg=4    ctermbg=none cterm=bold
+hi BlueOnNoneItalic           ctermfg=4    ctermbg=none cterm=italic
+hi MagentaOnNone              ctermfg=5    ctermbg=none cterm=none
+hi MagentaOnNoneBold          ctermfg=5    ctermbg=none cterm=bold
+hi MagentaOnNoneItalic        ctermfg=5    ctermbg=none cterm=italic
+hi CyanOnNone                 ctermfg=6    ctermbg=none cterm=none
+hi WhiteOnNone                ctermfg=7    ctermbg=none cterm=none
+hi WhiteOnNoneBold            ctermfg=7    ctermbg=none cterm=bold
+hi WhiteOnNoneItalic          ctermfg=7    ctermbg=none cterm=italic
+hi WhiteOnBlack               ctermfg=7    ctermbg=0    cterm=none
+hi WhiteOnBlackItalic         ctermfg=7    ctermbg=0    cterm=italic
+hi WhiteOnWhite               ctermfg=7    ctermbg=7    cterm=none
+hi WhiteOnBrightGreen         ctermfg=7    ctermbg=10   cterm=none
+hi WhiteOnBrightBlue          ctermfg=7    ctermbg=12   cterm=none
+hi BrightBlackOnNoneItalic    ctermfg=8    ctermbg=none cterm=italic
