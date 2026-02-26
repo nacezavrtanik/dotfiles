@@ -11,56 +11,53 @@ readonly _SHLFLIB_CORE_DEFAULT_GREP='grep -rn'
 
 _shlflib_core__print_header() {
     local title underline
-    title="${1^^}"; underline=${1//?/=}
+    title="$(basename $1)"; title="${title%.md}"; title="${title//_/ }"
+    title="${title^^}"; underline=${title//?/=}
     printf '\n%s\n%s\n\n' "$title" $underline
 }
 
 
 _shlflib_core__get_args() {
-    local args
+    local names
     if [[ -v SHLF_PICKER ]]; then
-        args=$(eval "_shlflib_core__list_raw | $SHLF_PICKER")
+        names=($(eval "_shlflib_core__list_raw | $SHLF_PICKER"))
     else
-        local PS3="$1 #) " name
+        local PS3="$1 #) " path
         select name in $(_shlflib_core__list_raw); do
             if [[ -n $name ]]; then
-                args="$name"
+                names=($name)
                 break
             else
                 printf 'invalid input: %s is not a number\n' "'$REPLY'" >&2
             fi
         done
     fi
-    printf -- "$args"
+    printf '%s ' "${names[@]/%/.md}"
 }
 
 
 _shlflib_core__create() {
-    local name file
-    for name in "$@"; do
-        file="$name.md"
-        name="${name//_/ }"
-        if [[ -f $file ]]; then
-            printf 'shlf: cannot create %s: Item already exists\n' "'$name'" >&2
+    local path
+    for path in "$@"; do
+        if [[ -f $path ]]; then
+            printf 'shlf: cannot create %s: Item already exists\n' "'$path'" >&2
             return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
         fi
 
-        _shlflib_core__print_header "$name" > $file
+        _shlflib_core__print_header $path > $path
     done
 }
 
 
 _shlflib_core__delete() {
-    local name file
-    for name in "$@"; do
-        file="$name.md"
-        if [[ ! -f $file ]]; then
-            printf 'shlf: cannot delete %s: Item does not exist\n' \
-                "'${name//_/ }'" >&2
+    local path
+    for path in "$@"; do
+        if [[ ! -f $path ]]; then
+            printf 'shlf: cannot delete %s: Item does not exist\n' "'$path'" >&2
             return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
 
-        rm -- $file
+        rm -- $path
     done
 }
 
@@ -86,20 +83,20 @@ _shlflib_core__grep() {
 
 
 _shlflib_core__list() {
-    local name
-    for name in *.md; do
-        [[ -e $name ]] || continue
-        name=${name%.*}; name="${name//_/ }"
+    local path name
+    for path in *.md; do
+        [[ -e $path ]] || continue
+        name=${path%.*}; name="${name//_/ }"
         printf '* %s\n' "$name"
     done | ${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER}
 }
 
 
 _shlflib_core__list_raw() {
-    local name
-    for name in *.md; do
-        [[ -e $name ]] || continue
-        printf '%s\n' ${name%.*}
+    for path in *.md; do
+        [[ -e $path ]] || continue
+        name=${path%.*}
+        printf '%s\n' "$name"
     done
 }
 
@@ -108,44 +105,37 @@ _shlflib_core__open() {
     [[ $# -gt 0 ]] || set -- $(_shlflib_core__get_args open)
     [[ $# -gt 0 ]] || return
 
-    local files name file
-    for name in "$@"; do
-        file="$name.md"
-        if [[ ! -f $file ]]; then
-            printf 'shlf: cannot open %s: Item does not exist\n' \
-                "'${name//_/ }'" >&2
+    local path paths
+    for path in "$@"; do
+        if [[ ! -f $path ]]; then
+            printf 'shlf: cannot open %s: Item does not exist\n' "'$path'" >&2
             return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
-        files="$files $file"
+        paths="$paths $path"
     done
 
-    eval "${SHLF_EDITOR:-$_SHLFLIB_CORE_DEFAULT_EDITOR} -- $files"
+    eval "${SHLF_EDITOR:-$_SHLFLIB_CORE_DEFAULT_EDITOR} -- $paths"
 }
 
 
 _shlflib_core__rename() {
-    local old_file="$1.md"
-    local old_name="${1//_/ }"
-    if [[ ! -f $old_file ]]; then
-        printf 'shlf: cannot rename %s: Item does not exist\n' "'$old_name'" >&2
+    if [[ ! -f $1 ]]; then
+        printf 'shlf: cannot rename %s: Item does not exist\n' "'$1'" >&2
         return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
     fi
-    local new_file="$2.md"
-    local new_name="${2//_/ }"
-    if [[ -f $new_file ]]; then
-        printf 'shlf: cannot rename to %s: Item already exists\n' \
-            "'$new_name'" >&2
+    if [[ -f $2 ]]; then
+        printf 'shlf: cannot rename to %s: Item already exists\n' "'$2'" >&2
         return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
     fi
 
     if cmp --quiet -- \
-        <(head -n 4 -- $old_file) \
-        <(_shlflib_core__print_header "$old_name")
+        <(head -n 4 -- $1) \
+        <(_shlflib_core__print_header "$1")
     then
-        _shlflib_core__print_header "$new_name" >> $new_file
-        tail -n +5 -- $old_file >> $new_file && rm -- $old_file
+        _shlflib_core__print_header "$2" >> $2
+        tail -n +5 -- $1 >> $2 && rm -- $1
     else
-        mv -- $old_file $new_file && touch -- $new_file
+        mv -- $1 $2 && touch -- $2
     fi
 }
 
@@ -154,18 +144,16 @@ _shlflib_core__show() {
     [[ $# -gt 0 ]] || set -- $(_shlflib_core__get_args show)
     [[ $# -gt 0 ]] || return
 
-    local files name file
-    for name in "$@"; do
-        file="$name.md"
-        if [[ ! -f $file ]]; then
-            printf 'shlf: cannot show %s: Item does not exist\n' \
-                "'${name//_/ }'" >&2
+    local path paths
+    for path in "$@"; do
+        if [[ ! -f $path ]]; then
+            printf 'shlf: cannot show %s: Item does not exist\n' "'$path'" >&2
             return $_SHLFLIB_EXITS_ITEM_DOES_NOT_EXIST
         fi
-        files="$files $file"
+        paths="$paths $path"
     done
 
-    eval "${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER} -- $files"
+    eval "${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER} -- $paths"
 }
 
 

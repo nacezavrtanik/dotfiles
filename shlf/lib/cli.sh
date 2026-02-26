@@ -150,17 +150,21 @@ _shlflib_cli__parse_args() {
         return $_SHLFLIB_EXITS_INVALID_USAGE
     fi
 
+    local value name arg args
     for value in "${values[@]}"; do
         name="${value// /_}"; name="${name%.md}"
         if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
             printf 'shlf: cannot parse %s: Contains invalid characters\n' \
                 "'$value'" >&2
             return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
-        else names="$names $name"
+        else
+            arg="$name"
+            [[ $flag == -g || $flag == --grep ]] || arg="$arg.md"
+            args="$args $arg"
         fi
     done
 
-    printf '%s ' "$flag ${names[@]}"
+    printf '%s ' "$flag ${args[@]}"
 }
 
 
