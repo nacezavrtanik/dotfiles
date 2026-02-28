@@ -13,7 +13,7 @@ Usage: shlf [OPTION] [ITEM]...
 Manage notes and todos stored as Markdown files.
 
 Item names may contain alphanumeric characters, dashes (-), underscores (_),
-and spaces ( ). Underscores and spaces are interchangeable.
+spaces ( ), and slashes (/). Underscores and spaces are interchangeable.
 
 Options:
   -c, --create ITEM...      create new items
@@ -160,9 +160,14 @@ _shlflib_cli__parse_args() {
             local value name
             for value in "${values[@]}"; do
                 name="${value// /_}"; name="${name%.md}"
-                if [[ ! $name =~ ^[-_[:alnum:]]+$ ]]; then
-                    printf 'shlf: cannot parse %s: Contains invalid characters\n' \
+                if [[ ! $name =~ ^[-_/[:alnum:]]+$ ]]; then
+                    printf \
+                        'shlf: cannot parse %s: Contains invalid characters\n' \
                         "'$value'" >&2
+                    return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
+                elif [[ $name =~ .*/$ ]]; then
+                    printf 'shlf: invalid name %s: Ends with %s\n' \
+                        "'$value'" "'/'" >&2
                     return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
                 else
                     args+=("$name.md")

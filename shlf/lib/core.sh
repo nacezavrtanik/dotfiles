@@ -48,6 +48,7 @@ _shlflib_core__create() {
             return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
         fi
 
+        mkdir --parents -- $(dirname $path)
         _shlflib_core__print_header $path > $path
     done
 }
@@ -65,6 +66,7 @@ _shlflib_core__delete() {
         fi
 
         rm -- $path
+        rmdir --parents --ignore-fail-on-non-empty -- $(dirname $path)
     done
 }
 
@@ -90,20 +92,42 @@ _shlflib_core__grep() {
 
 
 _shlflib_core__list() {
+    local dir level paths indent
+    if [[ $# == 0 ]]; then
+        dir=.; level=0
+    else
+        dir=$1; level=$2
+        printf '\n%*s%s/\n' $((2 * ($level - 1))) '' "$(basename $dir)"
+    fi
+    paths=($dir/*.md $dir/*/)
+    indent=$((2 * $level))
+
     local path name
-    for path in *.md; do
-        [[ -e $path ]] || continue
-        name=${path%.*}; name="${name//_/ }"
-        printf '* %s\n' "$name"
+    for path in "${paths[@]}"; do
+        if [[ ! -e $path ]]; then
+            continue
+        elif [[ $path == *.md ]]; then
+            name="$(basename $path)"; name="${name%.*}"; name="${name//_/ }"
+            printf '%*s* %s\n' $indent '' "$name"
+        elif [[ -d $path ]]; then
+            _shlflib_core__list $path $(($level + 1))
+        fi
     done | ${SHLF_PAGER:-$_SHLFLIB_CORE_DEFAULT_PAGER}
 }
 
 
 _shlflib_core__list_raw() {
-    for path in *.md; do
-        [[ -e $path ]] || continue
-        name=${path%.*}
-        printf '%s\n' "$name"
+    local paths path name
+    if [[ $# -gt 0 ]]; then paths=($1/*); else paths=(*); fi
+    for path in "${paths[@]}"; do
+        if [[ ! -e $path ]]; then
+            continue
+        elif [[ $path == *.md ]]; then
+            name=${path%.*}
+            printf '%s\n' "$name"
+        elif [[ -d $path ]]; then
+            _shlflib_core__list_raw $path
+        fi
     done
 }
 
@@ -135,15 +159,17 @@ _shlflib_core__rename() {
         return $_SHLFLIB_EXITS_ITEM_ALREADY_EXISTS
     fi
 
+    mkdir --parents -- $(dirname $2)
     if cmp --quiet -- \
         <(head -n 4 -- $1) \
-        <(_shlflib_core__print_header "$1")
+        <(_shlflib_core__print_header $1)
     then
-        _shlflib_core__print_header "$2" >> $2
+        _shlflib_core__print_header $2 >> $2
         tail -n +5 -- $1 >> $2 && rm -- $1
     else
         mv -- $1 $2 && touch -- $2
     fi
+    rmdir --parents --ignore-fail-on-non-empty -- $(dirname $1)
 }
 
 
