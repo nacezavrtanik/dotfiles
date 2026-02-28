@@ -27,8 +27,12 @@ _shlflib_core__get_args() {
             if [[ -n $name ]]; then
                 names=($name)
                 break
+            elif [[ $REPLY == q || $REPLY == quit ]]; then
+                names=()
+                break
             else
-                printf 'invalid input: %s is not a number\n' "'$REPLY'" >&2
+                printf 'invalid input: %s; enter a number, or %s to quit\n' \
+                    "'$REPLY'" "'q'" >&2
             fi
         done
     fi
