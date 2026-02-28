@@ -16,15 +16,15 @@ Item names may contain alphanumeric characters, dashes (-), underscores (_),
 and spaces ( ). Underscores and spaces are interchangeable.
 
 Options:
-  -c, --create ITEM...    create new items
-  -d, --delete ITEM...    delete items
-  -g, --grep PATTERN      search for pattern in items
-  -h, --help              show this help message
-  -l, --list              list all items (pretty format)
-  -L, --list-raw          list all items (pipe-friendly format)
-  -o, --open [ITEM]...    open items in the editor (default action)
-  -r, --rename OLD NEW    rename an item
-  -s, --show [ITEM]...    show items in the terminal
+  -c, --create ITEM...      create new items
+  -d, --delete [ITEM]...    delete items
+  -g, --grep PATTERN        search for pattern in items
+  -h, --help                show this help message
+  -l, --list                list all items (pretty format)
+  -L, --list-raw            list all items (pipe-friendly format)
+  -o, --open [ITEM]...      open items in the editor (default action)
+  -r, --rename OLD NEW      rename an item
+  -s, --show [ITEM]...      show items in the terminal
 
 The --open option uses \`$_SHLFLIB_CORE_DEFAULT_EDITOR\`, or \$SHLF_EDITOR if set.
 The --list and --show options use \`$_SHLFLIB_CORE_DEFAULT_PAGER\`, or \$SHLF_PAGER if set.
@@ -53,11 +53,11 @@ _shlflib_cli__parse_args() {
         1)
             case "$1" in
                 -c | --create | \
-                -d | --delete | \
                 -g | --grep   | \
                 -r | --rename )
                     invalid_usage=true
                     ;;
+                -d | --delete   | \
                 -h | --help     | \
                 -l | --list     | \
                 -L | --list-raw | \

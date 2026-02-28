@@ -50,6 +50,9 @@ _shlflib_core__create() {
 
 
 _shlflib_core__delete() {
+    [[ $# -gt 0 ]] || set -- $(_shlflib_core__get_args delete)
+    [[ $# -gt 0 ]] || return
+
     local path
     for path in "$@"; do
         if [[ ! -f $path ]]; then
