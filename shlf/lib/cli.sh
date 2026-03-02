@@ -203,13 +203,6 @@ _shlflib_cli__completion() {
                 -L | --list-raw )
                     COMPREPLY=()
                     ;;
-                -r | --rename )
-                    if [[ $COMP_CWORD == 2 ]]; then
-                        COMPREPLY=( $(compgen -W "$names" -- "$current") )
-                    else
-                        COMPREPLY=()
-                    fi
-                    ;;
                 *)
                     COMPREPLY=( $(compgen -W "$names" -- "$current") )
                     ;;
