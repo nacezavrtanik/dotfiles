@@ -66,7 +66,8 @@ _shlflib_core__delete() {
         fi
 
         rm -- $path
-        rmdir --parents --ignore-fail-on-non-empty -- $(dirname $path)
+        dir=$(dirname $path)
+        [[ $dir == . ]] || rmdir --parents --ignore-fail-on-non-empty -- $dir
     done
 }
 
@@ -169,7 +170,9 @@ _shlflib_core__rename() {
     else
         mv -- $1 $2 && touch -- $2
     fi
-    rmdir --parents --ignore-fail-on-non-empty -- $(dirname $1)
+    src_dir=$(dirname $1)
+    [[ $src_dir == . ]] ||
+        rmdir --parents --ignore-fail-on-non-empty -- $src_dir
 }
 
 
