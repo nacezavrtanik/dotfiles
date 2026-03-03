@@ -5,7 +5,7 @@ readonly _SHLFLIB_CORE__SOURCED=true
 
 readonly _SHLFLIB_CORE__DEFAULT_DIR="$HOME/.local/share/shlf/shelf/"
 readonly _SHLFLIB_CORE_DEFAULT_EDITOR='vim -O'
-readonly _SHLFLIB_CORE_DEFAULT_PAGER='less -F'
+readonly _SHLFLIB_CORE_DEFAULT_PAGER='less -FR'
 readonly _SHLFLIB_CORE_DEFAULT_GREP='grep -rn'
 
 
@@ -98,7 +98,7 @@ _shlflib_core__list() {
         dir=.; level=0
     else
         dir=$1; level=$2
-        printf '\n%*s%s/\n' $((2 * ($level - 1))) '' "$(basename $dir)"
+        printf '\n%*s\e[1;34m%s/\e[0m\n' $((2 * ($level - 1))) '' "$(basename $dir)"
     fi
     paths=($dir/*.md $dir/*/)
     indent=$((2 * $level))
@@ -109,7 +109,7 @@ _shlflib_core__list() {
             continue
         elif [[ $path == *.md ]]; then
             name="$(basename $path)"; name="${name%.*}"; name="${name//_/ }"
-            printf '%*s* %s\n' $indent '' "$name"
+            printf '%*s\e[1;32m*\e[0m %s\n' $indent '' "$name"
         elif [[ -d $path ]]; then
             _shlflib_core__list $path $(($level + 1))
         fi
