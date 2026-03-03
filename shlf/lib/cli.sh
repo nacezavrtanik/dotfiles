@@ -165,7 +165,11 @@ _shlflib_cli__parse_args() {
                         'shlf: cannot parse %s: Contains invalid characters\n' \
                         "'$value'" >&2
                     return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
-                elif [[ $name =~ .*/$ ]]; then
+                elif [[ $name == /* ]]; then
+                    printf 'shlf: invalid name %s: Starts with %s\n' \
+                        "'$value'" "'/'" >&2
+                    return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
+                elif [[ $name == */ ]]; then
                     printf 'shlf: invalid name %s: Ends with %s\n' \
                         "'$value'" "'/'" >&2
                     return $_SHLFLIB_EXITS_INVALID_ITEM_NAME
