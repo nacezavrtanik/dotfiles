@@ -22,6 +22,13 @@ else
     nvim --version
 fi
 
+if [[ ! -d ~/repos/shlf ]]; then
+    mkdir --parents ~/repos
+    echo "  shlf: attempting to clone ..."
+    git -C ~/repos/ clone git@github.com:nacezavrtanik/shlf.git
+else
+    echo "  shlf: already installed"
+fi
 
 echo "INIT: configs"
 

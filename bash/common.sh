@@ -23,9 +23,9 @@ export FZF_DEFAULT_OPTS='
 --color=gutter:-1,bg+:-1,fg+:-1
 '
 
-. ~/dotfiles/shlf/lib/shlflib.sh
+. ~/repos/shlf/lib/shlflib.sh
 shlflib_register_completion
-export SHLF_DIR=~/dotfiles/shlf/.shelf/
+export SHLF_DIR=~/dotfiles/.shelf/
 export SHLF_EDITOR='nvim -O'
 export SHLF_PAGER='batcat --style=plain --color=always'
 export SHLF_GREP='rg --line-number --color=always'

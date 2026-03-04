@@ -5,11 +5,8 @@ alacritty/local.toml
 vim/local.vim
 nvim/lua/local.lua
 
-# todos dir for use with todo command
-.todos/
-
 # notes and todos for use with shlf command
-shlf/.shelf
+.shelf/
 
 # theme config file
 .theme
@@ -17,7 +14,3 @@ shlf/.shelf
 # tmux sessions setup
 tmux/sessions.sh
 tmux/tmux.sessions.conf
-
-# command presets to filter with the go command
-.actions_pre
-.actions_post
