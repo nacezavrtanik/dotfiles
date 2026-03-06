@@ -95,7 +95,7 @@ hi! link StatuslineTerm Statusline
 hi! link StatuslineTermNC StatuslineNC
 hi! link LineNrAbove LineNr
 hi! link LineNrBelow LineNr
-hi! link MessageWindow PMenu
+hi! link MessageWindow Pmenu
 hi! link PopupNotification Todo
 hi! link markdownRule markdownListMarker
 hi! link markdownCode String
@@ -178,7 +178,7 @@ hi! link Identifier    WhiteOnNoneBold
 hi! link Function      WhiteOnNoneBold
 hi! link QuickFixLine  WhiteOnBlack
 hi! link Pmenu         WhiteOnBlack
-hi! link PmenuInfo     WhiteOnBlackItalic
+hi! link PmenuInfo     BrightBlackOnBlackItalic
 hi! link PmenuThumb    WhiteOnWhite
 hi! link TabLineFill   BlackOnNone
 hi! link WinSeparator  BlackOnNone
@@ -261,3 +261,4 @@ hi WhiteOnWhite               ctermfg=7    ctermbg=7    cterm=none
 hi WhiteOnBrightGreen         ctermfg=7    ctermbg=10   cterm=none
 hi WhiteOnBrightBlue          ctermfg=7    ctermbg=12   cterm=none
 hi BrightBlackOnNoneItalic    ctermfg=8    ctermbg=none cterm=italic
+hi BrightBlackOnBlackItalic   ctermfg=8    ctermbg=0    cterm=italic
