@@ -152,8 +152,8 @@ hi htmlItalicUnderline     ctermfg=none ctermbg=none cterm=italic,underline
 hi htmlBoldItalicUnderline ctermfg=none ctermbg=none cterm=bold,italic,underline
 " Treesitter highlights.
 hi! link @markup.heading.1             GreenOnNoneBold
-hi! link @markup.heading.2             GreenOnNoneBold
-hi! link @markup.heading.3             MagentaOnNoneBold
+hi! link @markup.heading.2             MagentaOnNoneBold
+hi! link @markup.heading.3             MagentaOnNoneBoldItalic
 hi! link @markup.heading.4             MagentaOnNoneItalic
 hi! link @markup.heading.5             MagentaOnNoneItalic
 hi! link @markup.heading.6             MagentaOnNoneItalic
@@ -168,6 +168,11 @@ hi! link @markup.quote                 WhiteOnNoneItalic
 hi! link @markup.math                  CyanOnNone
 hi! link @label.markdown               BlackOnNone
 hi! link @punctuation.special.markdown BlackOnNone
+
+hi! link @comment.error   Todo
+hi! link @comment.warning Todo
+hi! link @comment.todo    Todo
+hi! link @comment.note    Note
 
 hi! link Normal        WhiteOnNone
 hi! link StatuslineNC  WhiteOnNone
@@ -208,15 +213,16 @@ hi! link IncSearch    BlackOnYellow
 hi! link Cursor       BlackOnYellow
 hi! link Visual       BlackOnYellow
 
-hi! link ModeMsg    RedOnNoneBoldReverse
-hi! link ErrorMsg   RedOnNoneBold
-hi! link WarningMsg RedOnNone
-hi! link Error      RedOnNone
-hi! link Todo       RedOnNoneItalic
-hi! link OkMsg      GreenOnNone
-hi! link MoreMsg    BlueOnNoneItalic
-hi! link Question   BlueOnNoneItalic
-hi! link Directory  BlueOnNoneBold
+hi! link ModeMsg      RedOnNoneBoldReverse
+hi! link ErrorMsg     RedOnNoneBold
+hi! link WarningMsg   RedOnNone
+hi! link Error        RedOnNone
+hi! link Todo         RedOnNoneItalic
+hi! link Note         BlueOnNoneItalic
+hi! link OkMsg        GreenOnNone
+hi! link MoreMsg      BlueOnNoneItalic
+hi! link Question     BlueOnNoneItalic
+hi! link Directory    BlueOnNoneBold
 
 hi! link Statement GreenOnNone
 hi! link Constant  MagentaOnNone
@@ -250,6 +256,7 @@ hi BlueOnNoneBold             ctermfg=4    ctermbg=none cterm=bold
 hi BlueOnNoneItalic           ctermfg=4    ctermbg=none cterm=italic
 hi MagentaOnNone              ctermfg=5    ctermbg=none cterm=none
 hi MagentaOnNoneBold          ctermfg=5    ctermbg=none cterm=bold
+hi MagentaOnNoneBoldItalic    ctermfg=5    ctermbg=none cterm=bold,italic
 hi MagentaOnNoneItalic        ctermfg=5    ctermbg=none cterm=italic
 hi CyanOnNone                 ctermfg=6    ctermbg=none cterm=none
 hi WhiteOnNone                ctermfg=7    ctermbg=none cterm=none
