@@ -56,6 +56,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 vim.o.scrolloff = 10
 vim.o.sidescrolloff = 15
+vim.o.virtualedit = "block"
 
 vim.o.splitright = true
 vim.o.splitbelow = true
