@@ -36,4 +36,4 @@ cp --update=none \
     ~/dotfiles/tmux/tmux.sessions_template.conf \
     ~/dotfiles/tmux/tmux.sessions.conf
 
-tmux attach-session -t $initial \; detach
+tmux attach-session -t $initial
