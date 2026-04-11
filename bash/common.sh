@@ -30,6 +30,7 @@ weather() {
         -e 's/38;5;050/38;5;6/g' \
         -e 's/38;5;051/38;5;6/g' \
         -e 's/38;5;240/38;5;7/g' \
+        -e 's/38;5;251/38;5;7/g' \
         -e 's/38;5;255/38;5;7/g'
 }
 alias tree='tree --gitfile ~/dotfiles/.gitignore_global'
