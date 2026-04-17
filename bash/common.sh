@@ -1,10 +1,9 @@
-# Add custom commands to $PATH
+set -o vi
+export EDITOR=nvim
+
 export PATH=~/dotfiles/bin:$PATH
 
-# Terminal prompt color
 . color --prompt > /dev/null
-
-export EDITOR=nvim
 
 weather() {
     curl -s wttr.in/$1?Fq | sed \
