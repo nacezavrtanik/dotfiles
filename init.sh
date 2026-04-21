@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o errexit -o nounset
+
 echo INIT: packages
 
 sudo apt-get update
@@ -28,6 +30,20 @@ if [[ ! -d ~/repos/shlf ]]; then
     git -C ~/repos/ clone git@github.com:nacezavrtanik/shlf.git
 else
     echo "  shlf: already installed"
+fi
+
+if command -v uv > /dev/null 2>&1; then
+    echo "  uv: already installed"
+else
+    echo "  uv: attempting to install uv ..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    uv --version
+fi
+
+if command -v calcure > /dev/null 2>&1; then
+    echo "  calcure: already installed"
+else
+    uv tool install calcure
 fi
 
 echo "INIT: configs"

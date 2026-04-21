@@ -1,0 +1,2 @@
+#!/bin/bash
+calcure --config "$HOME/dotfiles/calcure/config.ini"
