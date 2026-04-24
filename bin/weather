@@ -39,7 +39,7 @@ if $process_for_tmux; then
     tput clear civis; stty -echo
     trap 'stty echo; tput cnorm' EXIT
     printf '%s' "${output%$'\n'*}"
-    read
+    while ! [[ $REPLY == q || $REPLY == Q ]]; do read -N 1; done
 else
     printf '%s\n' "$output"
 fi
