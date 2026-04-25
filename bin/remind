@@ -84,13 +84,13 @@ display_popup() {
     if [[ $((${#message} + 4)) -gt $width ]]; then
         width=$((${#message} + 4))
     fi
-    indent=$((($width - 1 - ${#message}) / 2)); newlines=$((($heigth - 3) / 2))
+    x_offset=$((($width - 1 - ${#message}) / 2)); y_offfset=$((($heigth - 3) / 2))
+    read_until_q='while ! [[ $REPLY == q || $REPLY == Q ]]; do read -N 1; done'
     popup_body=$(cat << EOF
         tput clear civis; stty -echo
-        printf '%.0s\n' $(seq -s ' ' 1 $newlines)
-        printf '%*s' $indent ''
+        tput cup $y_offfset $x_offset
         printf "$message"
-        read input
+        /bin/bash -c '$read_until_q'
 EOF
 )
 
