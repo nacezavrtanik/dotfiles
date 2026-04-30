@@ -111,6 +111,5 @@ git config --global alias.df 'difftool'
 git config --global alias.adog 'log --all --decorate --oneline --graph'
 git config --global alias.adof '! git_pretty_log_with_fzf.sh'
 git config --global trailer.ifExists addIfDifferent
-git config --global alias.rvb '! git_append_reviewed_by_trailer.sh'
 echo "  git: done"
 
