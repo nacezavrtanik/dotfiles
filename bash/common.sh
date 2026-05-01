@@ -1,4 +1,5 @@
 set -o vi
+bind -m vi-insert '"\C-l": clear-screen'
 export EDITOR=nvim
 
 export PATH=~/dotfiles/bin:$PATH
