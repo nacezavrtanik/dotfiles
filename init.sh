@@ -5,7 +5,8 @@ set -o errexit -o nounset
 echo INIT: packages
 
 sudo apt-get update
-sudo apt-get install --yes curl git tmux alacritty ripgrep fzf bat tree htop ncdu
+sudo apt-get install --yes \
+    curl git tmux alacritty ripgrep fzf bat tree htop ncdu network-manager
 
 # Compile nvim
 if command -v nvim > /dev/null 2>&1; then
