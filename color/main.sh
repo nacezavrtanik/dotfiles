@@ -138,8 +138,8 @@ function args_from_input() {
 
 function colorize_prompt() {
 	echo Changing prompt color to $1 ...
-	prompt="\[\e[1;${ansi_codes[$1]}m\]<\u\[\e[0m\] \w\[\e[1;${ansi_codes[$1]}m\]>\[\e[0m\] "
-	export PS1=$prompt
+	prompt="\[\e[1;${ansi_codes[$1]}m\]<\u\[\e[0m\]\[\e[1;${ansi_codes['white']}m\]@\h\[\e[0m\] \w\[\e[1;${ansi_codes[$1]}m\]>\[\e[0m\] "
+	export PS1="$prompt"
 }
 
 function colorize_keyboard() {
