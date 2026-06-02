@@ -101,6 +101,27 @@ else
 fi
 
 # GIT
+yellow='%x1b%x5b%x33%x33m'; blue='%x1b%x5b%x33%x34m'
+comma='%x2c'; closing_parenthesis='%x29'
+pointer="$yellow -> "
+separator="$blue$comma "
+prefix="$blue ("
+suffix="$blue$closing_parenthesis"
+decorate="pointer=$pointer,separator=$separator,prefix=$prefix,suffix=$suffix"
+format="%C(blue)%h%C(auto)%(decorate:$decorate) %s"
+
+git config --global log.graphColors 'blue'
+git config --global color.decorate.HEAD 'yellow bold'
+git config --global color.decorate.branch 'green bold'
+git config --global color.decorate.remoteBranch 'magenta bold'
+git config --global color.decorate.tag 'cyan bold'
+git config --global color.decorate.stash 'red bold'
+git config --global color.branch.current 'yellow'
+git config --global color.branch.local 'green'
+git config --global color.branch.remote 'magenta'
+git config --global color.status.branch 'green bold'
+git config --global color.advice.hint 'black'
+
 git config --global core.excludesfile ~/dotfiles/.gitignore_global
 git config --global core.editor nvim
 git config --global init.defaultbranch main
@@ -109,7 +130,7 @@ git config --global advice.detachedhead false
 git config --global diff.tool nvimdiff
 git config --global difftool.prompt false
 git config --global alias.df 'difftool'
-git config --global alias.adog 'log --all --decorate --oneline --graph'
+git config --global alias.adog "log --all --decorate --graph --format='$format'"
 git config --global alias.adof '! git_pretty_log_with_fzf.sh'
 git config --global trailer.ifExists addIfDifferent
 echo "  git: done"
