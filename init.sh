@@ -127,6 +127,10 @@ git config --global color.branch.local 'green'
 git config --global color.branch.remote 'magenta'
 git config --global color.status.branch 'green bold'
 git config --global color.advice.hint 'blue'
+git config --global color.diff.meta 'brightblack italic'
+git config --global color.diff.frag 'blue'
+git config --global color.diff.func 'white bold'
+git config --global color.diff.whitespace 'red red'
 
 git config --global core.excludesfile ~/dotfiles/.gitignore_global
 git config --global core.editor nvim
@@ -135,6 +139,8 @@ git config --global advice.statushints false
 git config --global advice.detachedhead false
 git config --global advice.suggestdetachinghead false
 git config --global diff.tool nvimdiff
+git config --global diff.noprefix true
+git config --global diff.interhunkcontext 3
 git config --global difftool.prompt false
 git config --global alias.df 'difftool'
 git config --global alias.adog 'log --all --graph --pretty=custom-oneline'
