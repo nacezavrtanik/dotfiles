@@ -6,7 +6,7 @@ export PATH=~/dotfiles/bin:$PATH
 
 . color --prompt > /dev/null
 
-alias tree='tree --gitfile ~/dotfiles/.gitignore_global'
+alias tree='tree --gitfile ~/dotfiles/git/.gitignore'
 alias ncdu='ncdu --color dark'
 
 alias bat='batcat'

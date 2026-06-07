@@ -1,0 +1,53 @@
+[pretty]
+	custom-oneline = %C(blue)%h%C(auto)%(decorate:pointer=%x1b%x5b%x33%x33m -> ,separator=%x1b%x5b%x33%x34m%x2c ,prefix=%x1b%x5b%x33%x34m (,suffix=%x1b%x5b%x33%x34m%x29) %s
+	custom-medium = %C(blue)%H%C(auto)%(decorate:pointer=%x1b%x5b%x33%x33m -> ,separator=%x1b%x5b%x33%x34m%x2c ,prefix=%x1b%x5b%x33%x34m (,suffix=%x1b%x5b%x33%x34m%x29)%n%C(brightblack)Author:%C(auto) %an %C(brightblack italic)<%ae>%C(reset)%n%C(brightblack)Date:  %C(auto) %ar %C(brightblack italic)<%ad>%C(reset)%n%n%C(white bold)%w(0,4)%s%C(reset)%n%C(white)%w(0,4,4)%+b%w()%C(reset)%n%C(black italic)--------------------------------------------------------------------------------%C(reset)
+[format]
+	pretty = custom-medium
+[color "advice"]
+	hint = blue
+[color "branch"]
+	current = yellow
+	local = green
+	remote = magenta
+[color "decorate"]
+	HEAD = yellow bold
+	branch = green bold
+	remoteBranch = magenta bold
+	stash = red bold
+	tag = cyan bold
+[color "diff"]
+	frag = blue
+	func = white bold
+	meta = brightblack italic
+	whitespace = red red
+[color "status"]
+	branch = green bold
+	localBranch = green bold
+	remoteBranch = magenta bold
+[log]
+	graphColors = blue
+[advice]
+	detachedHead = false
+	statusHints = false
+	suggestDetachingHead = false
+[alias]
+	adog = log --all --graph --pretty=custom-oneline
+	df = difftool
+	mr = mergetool
+[core]
+	editor = nvim
+	excludesFile = ~/dotfiles/git/.gitignore
+[diff]
+	interHunkContext = 3
+	noprefix = true
+	tool = nvimdiff
+[difftool]
+	prompt = false
+[init]
+	defaultBranch = main
+[merge]
+	tool = nvimdiff1
+[mergetool]
+	keepBackup = false
+[trailer]
+	ifExists = addIfDifferent

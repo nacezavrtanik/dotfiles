@@ -101,52 +101,5 @@ else
 fi
 
 # GIT
-yellow='%x1b%x5b%x33%x33m'; blue='%x1b%x5b%x33%x34m'
-comma='%x2c'; closing_parenthesis='%x29'
-rule='--------------------------------------------------------------------------------'
-pointer="$yellow -> "
-separator="$blue$comma "
-prefix="$blue ("
-suffix="$blue$closing_parenthesis"
-decorate="pointer=$pointer,separator=$separator,prefix=$prefix,suffix=$suffix"
-custom_oneline_format="%C(blue)%h%C(auto)%(decorate:$decorate) %s"
-custom_medium_format="%C(blue)%H%C(auto)%(decorate:$decorate)%n%C(brightblack)Author:%C(auto) %an %C(brightblack italic)<%ae>%n%C(reset)%C(brightblack)Date:  %C(auto) %ar %C(brightblack italic)<%ad>%n%n%C(reset)%C(white bold)%w(0,4)%s%n%C(reset)%C(white)%w(0,4,4)%+b%w()%n%C(black italic)$rule%C(reset)"
-
-git config --global pretty.custom-oneline "$custom_oneline_format"
-git config --global pretty.custom-medium "$custom_medium_format"
-git config --global format.pretty custom-medium
-
-git config --global log.graphColors 'blue'
-git config --global color.decorate.HEAD 'yellow bold'
-git config --global color.decorate.branch 'green bold'
-git config --global color.decorate.remoteBranch 'magenta bold'
-git config --global color.decorate.tag 'cyan bold'
-git config --global color.decorate.stash 'red bold'
-git config --global color.branch.current 'yellow'
-git config --global color.branch.local 'green'
-git config --global color.branch.remote 'magenta'
-git config --global color.status.branch 'green bold'
-git config --global color.advice.hint 'blue'
-git config --global color.diff.meta 'brightblack italic'
-git config --global color.diff.frag 'blue'
-git config --global color.diff.func 'white bold'
-git config --global color.diff.whitespace 'red red'
-
-git config --global core.excludesfile ~/dotfiles/.gitignore_global
-git config --global core.editor nvim
-git config --global init.defaultbranch main
-git config --global advice.statushints false
-git config --global advice.detachedhead false
-git config --global advice.suggestdetachinghead false
-git config --global diff.tool nvimdiff
-git config --global diff.noprefix true
-git config --global diff.interhunkcontext 3
-git config --global difftool.prompt false
-git config --global merge.tool nvimdiff1
-git config --global mergetool.keepbackup false
-git config --global alias.df 'difftool'
-git config --global alias.mr 'mergetool'
-git config --global alias.adog 'log --all --graph --pretty=custom-oneline'
-git config --global trailer.ifExists addIfDifferent
+git config --global include.path '~/dotfiles/git/.gitconfig'
 echo "  git: done"
-
