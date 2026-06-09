@@ -5,6 +5,9 @@
 	pretty = custom-medium
 [color "advice"]
 	hint = blue
+[color "blame"]
+	repeatedLines = black italic
+	highlightRecent = brightblack,1 year ago,blue,1 month ago,cyan,2 weeks ago,green,1 week ago,green bold,1 day ago,green bold reverse
 [color "branch"]
 	current = yellow
 	local = green
@@ -34,6 +37,9 @@
 	adog = log --all --graph --pretty=custom-oneline
 	df = difftool
 	mr = mergetool
+[blame]
+	coloring = highlightRecent
+	date = relative
 [core]
 	editor = nvim
 	excludesFile = ~/dotfiles/git/.gitignore

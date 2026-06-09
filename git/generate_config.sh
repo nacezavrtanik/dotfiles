@@ -37,6 +37,14 @@ configure pretty.custom-medium "$custom_medium_format"
 configure format.pretty 'custom-medium'
 
 configure color.advice.hint 'blue'
+configure color.blame.repeatedLines 'black italic'
+configure color.blame.highlightRecent \
+'brightblack,1 year ago,'\
+'blue,1 month ago,'\
+'cyan,2 weeks ago,'\
+'green,1 week ago,'\
+'green bold,1 day ago,'\
+'green bold reverse'
 configure color.branch.current 'yellow'
 configure color.branch.local 'green'
 configure color.branch.remote 'magenta'
@@ -60,6 +68,8 @@ configure advice.suggestDetachingHead false
 configure alias.adog 'log --all --graph --pretty=custom-oneline'
 configure alias.df 'difftool'
 configure alias.mr 'mergetool'
+configure blame.coloring 'highlightRecent'
+configure blame.date 'relative'
 configure core.editor 'nvim'
 configure core.excludesFile '~/dotfiles/git/.gitignore'
 configure diff.interHunkContext 3
